@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shows</string>
+    <string name="email_error_message">Invalid Email</string>
 </resources>
