@@ -13,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/top_left_illustration"
+        android:contentDescription="@string/top_left_illustration"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/top_left_illustration"
         />
 
     <ImageView
@@ -23,9 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/top_right_illustration"
+        android:contentDescription="@string/top_right_illustration"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/top_right_illustration"
         />
 
     <ImageView
@@ -35,9 +35,9 @@
         android:layout_marginTop="95dp"
         android:layout_marginStart="56dp"
         android:src="@drawable/triangle"
+        android:contentDescription="@string/play_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topIllustrationLeft"
-        android:contentDescription="@string/play_button"
         />
 
     <TextView
@@ -149,9 +149,9 @@
         android:fontFamily="@font/roboto_regular"
         android:textColor="@color/infinum_purple"
         android:background="@drawable/rounded_button"
+        android:enabled="false"
         app:backgroundTint="@color/button_selector"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:enabled="false"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
