@@ -58,7 +58,7 @@
         android:id="@+id/loginText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="125dp"
         android:layout_marginStart="24dp"
         android:text="@string/login_activity_name"
         android:textColor="@color/white"
