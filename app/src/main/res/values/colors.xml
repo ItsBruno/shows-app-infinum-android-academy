@@ -9,4 +9,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#BBBBBB</color>
+    <color name="error_text_color">#FF0000</color>
 </resources>

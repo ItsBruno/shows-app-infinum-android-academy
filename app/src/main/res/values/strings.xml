@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Shows</string>
     <string name="email_error_message">Invalid Email</string>
+    <string name="login_activity_name">Login</string>
+    <string name="login_instruction">In order to continue please log in.</string>
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="login">Login</string>
+    <string name="password_error_message">Password must contain at least one digit, lowercase letter, uppercase letter, special character
+        and must be at least 6 characters long</string>
 </resources>

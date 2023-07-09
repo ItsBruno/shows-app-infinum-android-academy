@@ -1,16 +1,18 @@
 package infinuma.android.shows.ui
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColor
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
-    private val emailRegex = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
 
     /*
     * 1. Put the app in background and move it back to foreground
@@ -33,21 +35,50 @@ class LoginActivity : AppCompatActivity() {
 
         binding.emailField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if(!binding.emailField.text.toString().matches(emailRegex)) {
+                if (!validateEmail(binding.emailField.text.toString().trim())) {
+
+                    binding.emailFieldLayout.error = getString(R.string.email_error_message)
+                    binding.emailFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
+
                     Snackbar.make(view, R.string.email_error_message, Snackbar.LENGTH_SHORT).show()
+
                     Log.d("snackbar", "should be shown")
+                } else {
+                    binding.emailFieldLayout.error = null
                 }
             }
             false
         }
 
+        binding.passwordFieldLayout.setErrorIconOnClickListener {
+            binding.passwordFieldLayout.error = null
+        }
+
+        binding.passwordField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (!validatePassword(binding.passwordField.text.toString().trim())) {
+
+                    binding.passwordFieldLayout.error = getString(R.string.password_error_message)
+                    binding.passwordFieldLayout.setErrorTextAppearance(R.style.PasswordErrorTextAppearance)
+
+                    //Snackbar.make(view, R.string.password_error_message, Snackbar.LENGTH_SHORT).show()
+
+                    Log.d("snackbar", "should be shown")
+                } else {
+                    binding.passwordFieldLayout.error = null
+                }
+            }
+            false
+        }
+
+
         binding.emailField.addTextChangedListener {
             binding.loginButton.isEnabled =
-                validateCredentialsStructure(binding.emailField.text.toString().trim(), binding.passwordField.text.toString().trim())
+                validateEmail(binding.emailField.text.toString().trim()) && validatePassword(binding.passwordField.text.toString().trim())
         }
         binding.passwordField.addTextChangedListener {
             binding.loginButton.isEnabled =
-                validateCredentialsStructure(binding.emailField.text.toString().trim(), binding.passwordField.text.toString().trim())
+                validateEmail(binding.emailField.text.toString().trim()) && validatePassword(binding.passwordField.text.toString().trim())
         }
 
         Log.i("activityCreateCallback", "On create has been called")
@@ -83,15 +114,14 @@ class LoginActivity : AppCompatActivity() {
         super.onRestart()
     }
 
-    private fun validateCredentialsStructure(email: String, password: String): Boolean {
-        /*
-                Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one special character, no space, and it must be at least 6 characters long.
-        */
+    private fun validateEmail(email: String): Boolean {
+        val emailRegex = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
+        return email.matches(emailRegex)
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        /*Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and must be at least 6 characters long*/
         val passwordRegex = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{6,}\$")
-        Log.d("email", email)
-        Log.d("emailValidation", email.matches(emailRegex).toString())
-        Log.d("password", password)
-        Log.d("passwordValidation", password.matches(passwordRegex).toString())
-        return email.matches(emailRegex) && password.matches(passwordRegex)
+        return password.matches(passwordRegex)
     }
 }
