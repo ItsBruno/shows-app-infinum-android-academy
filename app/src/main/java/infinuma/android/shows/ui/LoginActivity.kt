@@ -4,9 +4,11 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
+import androidx.core.view.marginBottom
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.snackbar.Snackbar
 import infinuma.android.shows.R
@@ -36,6 +38,9 @@ class LoginActivity : AppCompatActivity() {
         binding.emailField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (!validateEmail(binding.emailField.text.toString().trim())) {
+                    Log.d("emailHeight", "Email height before error: ${binding.emailFieldLayout.height.toString()}")
+                    //required for the error message to be displayed
+                    binding.emailFieldLayout.layoutParams.height = WRAP_CONTENT
 
                     binding.emailFieldLayout.error = getString(R.string.email_error_message)
                     binding.emailFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
@@ -44,6 +49,9 @@ class LoginActivity : AppCompatActivity() {
 
                     Log.d("snackbar", "should be shown")
                 } else {
+                    Log.d("emailHeight", "Email height after error resolution: ${binding.emailFieldLayout.height.toString()}")
+                    //sets the UI back to the default look when the email error message disappears and leaves empty space
+                    binding.emailFieldLayout.layoutParams.height = 168
                     binding.emailFieldLayout.error = null
                 }
             }
