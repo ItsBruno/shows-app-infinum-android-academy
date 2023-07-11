@@ -148,10 +148,10 @@ class LoginActivity : AppCompatActivity() {
 
         } else {
             resources.displayMetrics.density
-            val pixels = (168 * resources.displayMetrics.density + 0.5f)
+            val pixels= (168 * resources.displayMetrics.density + 0.5f).toInt()
             Log.d("emailHeight", "Email height after error resolution: ${binding.emailFieldLayout.height}")
             //sets the UI back to the default look when the email error message disappears and leaves empty space
-            binding.emailFieldLayout.layoutParams.height = 168
+            binding.emailFieldLayout.layoutParams.height = pixels
             binding.emailFieldLayout.error = null
         }
     }
