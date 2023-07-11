@@ -3,12 +3,10 @@ package infinuma.android.shows.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.google.android.material.snackbar.Snackbar
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ActivityLoginBinding
 
@@ -148,8 +146,9 @@ class LoginActivity : AppCompatActivity() {
             binding.emailFieldLayout.error = getString(R.string.email_error_message)
             binding.emailFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
 
-            Log.d("snackbar", "should be shown")
         } else {
+            resources.displayMetrics.density
+            val pixels = (168 * resources.displayMetrics.density + 0.5f)
             Log.d("emailHeight", "Email height after error resolution: ${binding.emailFieldLayout.height}")
             //sets the UI back to the default look when the email error message disappears and leaves empty space
             binding.emailFieldLayout.layoutParams.height = 168
