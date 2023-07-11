@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Shows</string>
+    <string name="email_error_message">Invalid Email</string>
+    <string name="login_activity_name">Login</string>
+    <string name="login_instruction">In order to continue please log in.</string>
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="login">Login</string>
+    <string name="password_error_message">Password must be at least 6 characters long</string>
+    <string name="top_left_illustration">leftIllustration</string>
+    <string name="top_right_illustration">Top right illustration</string>
+    <string name="play_button">Play button</string>
+    <string name="welcome_text">Welcome, %s!</string>
 </resources>
