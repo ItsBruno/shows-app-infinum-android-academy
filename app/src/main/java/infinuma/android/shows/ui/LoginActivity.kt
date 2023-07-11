@@ -139,19 +139,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateEmailField() {
         if (!validateEmail(binding.emailField.text.toString().trim())) {
-            Log.d("emailHeight", "Email height before error: ${binding.emailFieldLayout.height}")
-            //required for the error message to be displayed
-            binding.emailFieldLayout.layoutParams.height = WRAP_CONTENT
 
             binding.emailFieldLayout.error = getString(R.string.email_error_message)
             binding.emailFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
 
         } else {
-            resources.displayMetrics.density
-            val pixels= (168 * resources.displayMetrics.density + 0.5f).toInt()
-            Log.d("emailHeight", "Email height after error resolution: ${binding.emailFieldLayout.height}")
-            //sets the UI back to the default look when the email error message disappears and leaves empty space
-            binding.emailFieldLayout.layoutParams.height = pixels
             binding.emailFieldLayout.error = null
         }
     }
