@@ -1,157 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/infinum_purple"
-    tools:context=".ui.LoginActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/topIllustrationLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/top_left_illustration"
-        android:contentDescription="@string/top_left_illustration"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/topIllustrationRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/top_right_illustration"
-        android:contentDescription="@string/top_right_illustration"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/triangleIllustration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
-        android:layout_marginStart="56dp"
-        android:src="@drawable/triangle"
-        android:contentDescription="@string/play_button"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topIllustrationLeft"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:layout_marginStart="19dp"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textFontWeight="700"
-        android:textSize="34sp"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintLeft_toRightOf="@+id/triangleIllustration"
-        app:layout_constraintTop_toBottomOf="@id/topIllustrationLeft"
-        />
-
-    <TextView
-        android:id="@+id/loginText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="125dp"
-        android:layout_marginStart="24dp"
-        android:text="@string/login_activity_name"
-        android:textColor="@color/white"
-        android:textFontWeight="900"
-        android:textSize="34sp"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/triangleIllustration"
-        />
-
-    <TextView
-        android:id="@+id/instructionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:text="@string/login_instruction"
-        android:textColor="@color/white"
-        android:textFontWeight="400"
-        android:textSize="17sp"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginText"
-        />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailFieldLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="342dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="26dp"
-        android:hint="@string/email_text"
-        android:textColorHint="@color/white"
-        app:boxStrokeColor="@color/selector_textfield_stroke"
-        app:hintTextColor="@color/white"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/instructionText"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:inputType="textEmailAddress"
-            android:imeOptions="actionDone"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordFieldLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="342dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:hint="@string/password_text"
-        android:textColorHint="@color/white"
-        app:boxStrokeColor="@color/selector_textfield_stroke"
-        app:endIconMode="password_toggle"
-        app:endIconTint="@color/white"
-        app:hintTextColor="@color/white"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailFieldLayout"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwordField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:inputType="textPassword"
-            android:imeOptions="actionDone"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/loginButton"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="22dp"
-        android:layout_marginBottom="32dp"
-        android:text="@string/login"
-        android:textFontWeight="700"
-        android:fontFamily="@font/roboto_regular"
-        android:textColor="@color/infinum_purple"
-        android:background="@drawable/rounded_button"
-        android:enabled="false"
-        app:backgroundTint="@color/button_selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:layout_height="match_parent"
+        android:background="@color/infinum_purple"
+        tools:context=".ui.LoginActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/topIllustrationLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/top_left_illustration"
+            android:contentDescription="@string/top_left_illustration"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/topIllustrationRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/top_right_illustration"
+            android:contentDescription="@string/top_right_illustration"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/triangleIllustration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="95dp"
+            android:layout_marginStart="56dp"
+            android:src="@drawable/triangle"
+            android:contentDescription="@string/play_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topIllustrationLeft"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="92dp"
+            android:layout_marginStart="19dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="34sp"
+            app:layout_constraintLeft_toRightOf="@+id/triangleIllustration"
+            app:layout_constraintTop_toBottomOf="@id/topIllustrationLeft"
+            />
+
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="125dp"
+            android:layout_marginStart="24dp"
+            android:text="@string/login_activity_name"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="34sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/triangleIllustration"
+            />
+
+        <TextView
+            android:id="@+id/instructionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:text="@string/login_instruction"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginText"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="26dp"
+            android:hint="@string/email_text"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/selector_textfield_stroke"
+            app:hintTextColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructionText"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionDone"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:hint="@string/password_text"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/selector_textfield_stroke"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
+            app:hintTextColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emailFieldLayout"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginTop="155dp"
+            android:text="@string/login"
+            android:textStyle="bold"
+            android:textColor="@color/infinum_purple"
+            android:background="@drawable/rounded_button"
+            android:enabled="false"
+            app:backgroundTint="@color/button_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -8,13 +8,15 @@ import infinuma.android.shows.databinding.ActivityWelcomeBinding
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWelcomeBinding
+    companion object {
+        private const val EXTRA_EMAIL = "email"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
-        binding.welcomeText.text = getString(R.string.welcome_text, intent.getStringExtra("email"))
+        binding.welcomeText.text = getString(R.string.welcome_text, intent.getStringExtra(EXTRA_EMAIL))
     }
 }

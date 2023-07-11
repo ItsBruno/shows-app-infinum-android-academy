@@ -6,8 +6,7 @@
     <string name="email_text">Email</string>
     <string name="password_text">Password</string>
     <string name="login">Login</string>
-    <string name="password_error_message">Password must contain at least one digit, lowercase letter, uppercase letter, special character
-        and must be at least 6 characters long</string>
+    <string name="password_error_message">Password must be at least 6 characters long</string>
     <string name="top_left_illustration">leftIllustration</string>
     <string name="top_right_illustration">Top right illustration</string>
     <string name="play_button">Play button</string>
