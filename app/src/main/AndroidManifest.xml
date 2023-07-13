@@ -12,14 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shows"
         tools:targetApi="31">
+
         <activity
-            android:name=".ui.WelcomeActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="LaunchWelcome"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+            android:name=".ui.ShowsActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true">

@@ -12,6 +12,7 @@ import infinuma.android.shows.databinding.ActivityLoginBinding
 
 const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
 const val PASSWORD_REGEX = "^.{6,}$"
+
 class LoginActivity : AppCompatActivity() {
     /*
     * 1. Put the app in background and move it back to foreground
@@ -24,11 +25,12 @@ class LoginActivity : AppCompatActivity() {
       -> onPause() -> onStop() -> onRestart() -> onStart() -> onResume()
     */
 
-    companion object {
-        private const val EXTRA_EMAIL = "email"
-    }
-
     private lateinit var binding: ActivityLoginBinding
+
+    companion object {
+        const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+        const val PASSWORD_REGEX = "^.{6,}$"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +40,10 @@ class LoginActivity : AppCompatActivity() {
         with(binding) {
 
             emailField.setOnFocusChangeListener { _, hasFocus ->
-                if(!hasFocus) {
+                if (!hasFocus) {
                     updateEmailField()
                 }
             }
-
 
             passwordFieldLayout.setErrorIconOnClickListener {
                 binding.passwordFieldLayout.error = null
@@ -65,53 +66,23 @@ class LoginActivity : AppCompatActivity() {
 
             emailField.addTextChangedListener {
                 binding.loginButton.isEnabled =
-                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(binding.passwordField.text.toString().trim())
+                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
+                        binding.passwordField.text.toString().trim()
+                    )
             }
             passwordField.addTextChangedListener {
                 binding.loginButton.isEnabled =
-                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(binding.passwordField.text.toString().trim())
+                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
+                        binding.passwordField.text.toString().trim()
+                    )
             }
 
             loginButton.setOnClickListener {
-                val email = binding.emailField.text
 
-                //explicit intent
-                val intent = Intent(root.context, WelcomeActivity::class.java)
-
-                //implicit intent
-                /*val intent = Intent()
-                intent.action = "LaunchWelcome"
-                intent.addCategory("android.intent.category.DEFAULT")*/
-
-                intent.putExtra(EXTRA_EMAIL, email?.substring(0, email.indexOf('@')))
-
+                val intent = Intent(root.context, ShowsActivity::class.java)
                 startActivity(intent)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-     }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
     }
 
     private fun validateEmail(email: String): Boolean {

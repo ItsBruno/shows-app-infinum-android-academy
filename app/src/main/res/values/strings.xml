@@ -11,4 +11,7 @@
     <string name="top_right_illustration">Top right illustration</string>
     <string name="play_button">Play button</string>
     <string name="welcome_text">Welcome, %s!</string>
+    <string name="shows">Shows</string>
+    <string name="no_shows">No shows</string>
+    <string name="no_shows_message">Your shows are not showing. Get it?</string>
 </resources>
