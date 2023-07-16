@@ -8,20 +8,17 @@ import infinuma.android.shows.databinding.ShowCardBinding
 import infinuma.android.shows.model.Show
 
 class ShowsAdapter(
-    private var shows: List<Show>
-    //private val onShowClickCallback: (Show) -> Unit
+    private var shows: List<Show>, private val onShowClickCallback: (Show) -> Unit
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     inner class ShowViewHolder(private val binding: ShowCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(show: Show) {
-            /*binding.cardContainer.setOnClickListener {
+            binding.cardContainer.setOnClickListener {
                 onShowClickCallback.invoke(show)
-            }*/
+            }
             binding.showTitle.text = show.title
             binding.showDescription.text = show.description
-            /*binding.showDescription.setOnClickListener {
-                binding.showDescription.requestFocus()
-            }*/
+
             binding.image.setImageResource(show.imageResourceId)
         }
     }
