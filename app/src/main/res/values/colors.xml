@@ -10,4 +10,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#BBBBBB</color>
     <color name="error_text_color">#FF0000</color>
+    <color name="review_button_color">#52368C</color>
 </resources>

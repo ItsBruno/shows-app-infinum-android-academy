@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_margin_show_details_constlayout">10dp</dimen>
+    <dimen name="bottom_margin_show_details_24">24dp</dimen>
+    <dimen name="horizontal_marign_show_details">24dp</dimen>
+</resources>
