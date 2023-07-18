@@ -1,4 +1,4 @@
-package infinuma.android.shows.ui
+package infinuma.android.shows.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ActivityLoginBinding
+import infinuma.android.shows.ui.ShowsActivity
 
 const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
 const val PASSWORD_REGEX = "^.{6,}$"

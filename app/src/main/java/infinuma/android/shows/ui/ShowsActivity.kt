@@ -3,10 +3,11 @@ package infinuma.android.shows.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ActivityShowsBinding
 import infinuma.android.shows.model.shows
+import infinuma.android.shows.show_details.ShowDetailsActivity
 
 class ShowsActivity : AppCompatActivity() {
 
@@ -17,9 +18,7 @@ class ShowsActivity : AppCompatActivity() {
     private lateinit var adapter: ShowsAdapter
 
     companion object {
-        const val SHOW_TITLE: String = "title"
-        const val SHOW_SRC: String = "src"
-        const val SHOW_DESC: String = "description"
+        const val SHOW_ID: String = "show_id"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +35,16 @@ class ShowsActivity : AppCompatActivity() {
     }
 
     private fun toggleRecyclerView() {
-        if (containsShows) {
-            binding.recyclerView.visibility = View.GONE
-            binding.emptyState.visibility = View.VISIBLE
-            binding.message.visibility = View.VISIBLE
-        } else {
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.emptyState.visibility = View.GONE
-            binding.message.visibility = View.GONE
+        with(binding) {
+            if (containsShows) {
+                recyclerView.visibility = View.GONE
+                noShowsDisplay.visibility = View.VISIBLE
+                noShows.text = getString(R.string.get_shows)
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                noShowsDisplay.visibility = View.GONE
+                noShows.text = getString(R.string.no_shows)
+            }
         }
         containsShows = !containsShows
     }
@@ -51,9 +52,7 @@ class ShowsActivity : AppCompatActivity() {
     private fun initShowsRecycler() {
         adapter = ShowsAdapter(shows) { show ->
             val intent = Intent(binding.root.context, ShowDetailsActivity::class.java)
-            intent.putExtra(SHOW_TITLE, show.title)
-            intent.putExtra(SHOW_SRC, show.imageResourceId)
-            intent.putExtra(SHOW_DESC, show.description)
+            intent.putExtra(SHOW_ID, show.id)
             startActivity(intent)
         }
         binding.recyclerView.adapter = adapter

@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="@dimen/bottom_margin_show_details_constlayout"
     android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -31,7 +31,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/bottom_margin_show_details_24"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@id/reviewButton"
@@ -51,7 +51,7 @@
                 android:id="@+id/show_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 android:layout_marginBottom="56dp"
                 android:textSize="36sp"
                 android:textStyle="bold"
@@ -63,7 +63,7 @@
                 android:id="@+id/img_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 app:cardCornerRadius="32dp"
                 >
 
@@ -79,7 +79,7 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 android:layout_marginVertical="22dp"
                 android:textSize="17sp"
                 android:textColor="@color/black"
@@ -90,7 +90,7 @@
                 android:id="@+id/reviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 android:text="@string/reviews"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 tools:text="@string/d_reviews_f_average"
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="@dimen/horizontal_marign_show_details"
                 android:numStars="@integer/rating_bar_num_stars"
                 android:contentDescription="@string/show_rating"
                 android:isIndicator="true"
@@ -141,6 +141,13 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/review_card"
                 />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/reviews_present_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="review_recycler_view, rating_bar, review_stats"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -150,8 +157,8 @@
         style="@style/ReviewButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
+        android:layout_marginBottom="@dimen/bottom_margin_show_details_24"
         android:text="@string/write_a_review"
         android:textStyle="bold"
         android:textAllCaps="false"
@@ -161,5 +168,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

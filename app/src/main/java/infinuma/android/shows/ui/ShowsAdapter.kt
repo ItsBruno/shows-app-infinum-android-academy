@@ -13,13 +13,15 @@ class ShowsAdapter(
 
     inner class ShowViewHolder(private val binding: ShowCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(show: Show) {
-            binding.cardContainer.setOnClickListener {
-                onShowClickCallback.invoke(show)
-            }
-            binding.showTitle.text = show.title
-            binding.showDescription.text = show.description
+            with(binding) {
+                cardContainer.setOnClickListener {
+                    onShowClickCallback.invoke(show)
+                }
+                showTitle.text = show.title
+                showDescription.text = show.description
 
-            binding.image.setImageResource(show.imageResourceId)
+                image.setImageResource(show.imageResourceId)
+            }
         }
     }
 
