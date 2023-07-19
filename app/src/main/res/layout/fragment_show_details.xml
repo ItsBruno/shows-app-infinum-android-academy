@@ -17,7 +17,7 @@
         >
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
+            android:id="@+id/toolAppBar"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/bottom_margin_show_details_24"
+        android:layout_marginBottom="@dimen/margin_24dp"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@id/reviewButton"
@@ -158,18 +158,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
-        android:layout_marginBottom="@dimen/bottom_margin_show_details_24"
+        android:layout_marginBottom="@dimen/margin_24dp"
         android:text="@string/write_a_review"
         android:textStyle="bold"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:backgroundTint="@color/review_button_color"
+        android:backgroundTint="@color/purple_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-

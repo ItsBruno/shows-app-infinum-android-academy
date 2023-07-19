@@ -1,42 +1,41 @@
-package infinuma.android.shows.login
+package infinuma.android.shows.ui.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.navigation.fragment.findNavController
 import infinuma.android.shows.R
-import infinuma.android.shows.databinding.ActivityLoginBinding
-import infinuma.android.shows.ui.ShowsActivity
+import infinuma.android.shows.databinding.FragmentLoginBinding
 
-const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
-const val PASSWORD_REGEX = "^.{6,}$"
-
-class LoginActivity : AppCompatActivity() {
-    /*
-    * 1. Put the app in background and move it back to foreground
-      -> onPause() -> onStop() -> onRestart() -> onStart() -> onResume()
-
-    * 2. Kill the app
-     -> onPause() -> onStop() -> onDestroy()
-
-    * 3. Lock the phones screen and unlock it
-      -> onPause() -> onStop() -> onRestart() -> onStart() -> onResume()
-    */
-
-    private lateinit var binding: ActivityLoginBinding
+class LoginFragment : Fragment() {
 
     companion object {
         const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
         const val PASSWORD_REGEX = "^.{6,}$"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private var _binding: FragmentLoginBinding? = null
 
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initListeners()
+    }
+
+    private fun initListeners() {
         with(binding) {
 
             emailField.setOnFocusChangeListener { _, hasFocus ->
@@ -78,11 +77,14 @@ class LoginActivity : AppCompatActivity() {
             }
 
             loginButton.setOnClickListener {
-
-                val intent = Intent(root.context, ShowsActivity::class.java)
-                startActivity(intent)
+                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToShowsFragment())
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun validateEmail(email: String): Boolean {
