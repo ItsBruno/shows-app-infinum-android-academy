@@ -21,10 +21,10 @@
         <action
             android:id="@+id/actionShowDetailsFragmentToLoginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"/>
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/actionShowsFragmentToShowDetailsFragment"
             app:destination="@id/showDetailsFragment"

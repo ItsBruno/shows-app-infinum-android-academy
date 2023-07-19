@@ -64,16 +64,14 @@ class LoginFragment : Fragment() {
             }
 
             emailField.addTextChangedListener {
-                binding.loginButton.isEnabled =
-                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
-                        binding.passwordField.text.toString().trim()
-                    )
+                binding.loginButton.isEnabled = validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
+                    binding.passwordField.text.toString().trim()
+                )
             }
             passwordField.addTextChangedListener {
-                binding.loginButton.isEnabled =
-                    validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
-                        binding.passwordField.text.toString().trim()
-                    )
+                binding.loginButton.isEnabled = validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
+                    binding.passwordField.text.toString().trim()
+                )
             }
 
             loginButton.setOnClickListener {
@@ -92,8 +90,7 @@ class LoginFragment : Fragment() {
         return email.matches(emailRegex)
     }
 
-    private fun validatePassword(password: String): Boolean {
-        /*Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and must be at least 6 characters long*/
+    private fun validatePassword(password: String): Boolean {/*Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and must be at least 6 characters long*/
         val passwordRegex = Regex(PASSWORD_REGEX)
         return password.matches(passwordRegex)
     }

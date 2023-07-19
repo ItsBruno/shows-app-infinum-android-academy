@@ -141,12 +141,13 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/review_card"
                 />
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/reviews_present_display"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="review_recycler_view, rating_bar, review_stats"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:constraint_referenced_ids="review_recycler_view, rating_bar, review_stats"/>
 
         </LinearLayout>
 

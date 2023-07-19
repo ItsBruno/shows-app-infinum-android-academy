@@ -90,10 +90,10 @@ class ShowDetailsFragment : Fragment() {
 
         //rating is required so it can never be less than 1
         dialogAddReviewBinding.ratingBar.setOnRatingBarChangeListener { _, _, _ ->
-            if(dialogAddReviewBinding.ratingBar.rating < 1) dialogAddReviewBinding.ratingBar.rating = 1f
+            if (dialogAddReviewBinding.ratingBar.rating < 1) dialogAddReviewBinding.ratingBar.rating = 1f
         }
 
-        dialogAddReviewBinding.closeButton.setOnClickListener{
+        dialogAddReviewBinding.closeButton.setOnClickListener {
             dialog.dismiss()
         }
 
