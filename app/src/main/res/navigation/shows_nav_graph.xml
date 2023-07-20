@@ -36,7 +36,7 @@
         android:name="infinuma.android.shows.ui.show_details.ShowDetailsFragment"
         android:label="ShowDetailsFragment">
         <argument
-            android:name="show_id"
+            android:name="showId"
             app:argType="string"/>
     </fragment>
 </navigation>

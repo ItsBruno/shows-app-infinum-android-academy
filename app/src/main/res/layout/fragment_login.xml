@@ -77,7 +77,7 @@
             android:id="@+id/instructionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/size16dp"
             android:layout_marginStart="24dp"
             android:text="@string/login_instruction"
             android:textColor="@color/white"
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text16sp"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionDone"
                 />
@@ -137,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text16sp"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"
                 />

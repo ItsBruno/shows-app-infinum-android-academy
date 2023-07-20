@@ -3,4 +3,7 @@
     <dimen name="bottom_margin_show_details_constlayout">10dp</dimen>
     <dimen name="margin_24dp">24dp</dimen>
     <dimen name="horizontal_marign_show_details">24dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="text16sp">16sp</dimen>
+    <dimen name="size16dp">16dp</dimen>
 </resources>

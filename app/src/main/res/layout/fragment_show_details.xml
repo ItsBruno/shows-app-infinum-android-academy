@@ -97,31 +97,46 @@
                 android:textColor="@color/black"
                 />
 
-            <TextView
-                android:id="@+id/review_stats"
+            <LinearLayout
+                android:id="@+id/reviews_present_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                tools:text="@string/d_reviews_f_average"
-                />
+                android:orientation="vertical"
+                >
 
-            <RatingBar
-                android:id="@+id/rating_bar"
-                style="@style/CustomRatingBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="@dimen/horizontal_marign_show_details"
-                android:numStars="@integer/rating_bar_num_stars"
-                android:contentDescription="@string/show_rating"
-                android:isIndicator="true"
-                tools:rating="3"
-                />
+                <TextView
+                    android:id="@+id/review_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    tools:text="@string/d_reviews_f_average"
+                    />
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@style/CustomRatingBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="@dimen/horizontal_marign_show_details"
+                    android:numStars="@integer/rating_bar_num_stars"
+                    android:contentDescription="@string/show_rating"
+                    android:isIndicator="true"
+                    tools:rating="3"
+                    />
 
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/review_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/review_card"
+                    />
+            </LinearLayout>
             <TextView
                 android:id="@+id/no_reviews_message"
                 android:layout_width="match_parent"
@@ -133,21 +148,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/gray"
                 />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/review_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/review_card"
-                />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/reviews_present_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="review_recycler_view, rating_bar, review_stats"/>
 
         </LinearLayout>
 

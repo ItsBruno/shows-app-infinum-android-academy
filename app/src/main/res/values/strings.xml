@@ -31,4 +31,5 @@
     <string name="add_review">Add a review:</string>
     <string name="comment">Comment</string>
     <string name="submit">Submit</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -43,40 +43,38 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         init()
     }
 
     private fun init() {
         showId = args.showId
 
-        for (show_iter in shows) {
-            if (show_iter.id == showId) {
-                show = show_iter
+        for (showIter in shows) {
+            if (showIter.id == showId) {
+                show = showIter
                 break
             }
         }
 
         showsTitle = show.title
-        val showDesc = show.description
-        val showSrc = show.imageResourceId
 
-        val activity = requireActivity() as AppCompatActivity
+        with(requireActivity() as AppCompatActivity){
+            with(binding) {
+                description.text = show.description
+                showTitle.text = showsTitle
+                showImage.setImageResource(show.imageResourceId)
 
-        with(binding) {
-            description.text = showDesc
-            showTitle.text = showsTitle
-            showImage.setImageResource(showSrc)
+                reviewButton.setOnClickListener {
+                    buildDialog()
+                }
+                setSupportActionBar(toolAppBar)
 
-            reviewButton.setOnClickListener {
-                buildDialog()
             }
-            activity.setSupportActionBar(toolAppBar)
 
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            supportActionBar?.title = ""
         }
-
-        NavigationUI.setupActionBarWithNavController(activity, findNavController())
-        activity.supportActionBar?.title = ""
 
         updateRating()
 
@@ -100,7 +98,7 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            addReview(ShowReview(R.drawable.ic_profile_placeholder, "Unknown", rating, review))
+            addReview(ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review))
             dialog.dismiss()
         }
         dialog.show()
@@ -128,8 +126,8 @@ class ShowDetailsFragment : Fragment() {
         val showReviews = reviews[showId]
 
         with(binding) {
-            if (showReviews != null) {
-                adapter = ShowDetailsAdapter(showReviews)
+            if ((showReviews != null) and (showReviews?.size != 0)) {
+                adapter = ShowDetailsAdapter(showReviews!!)
                 reviewRecyclerView.adapter = adapter
 
                 reviewsPresentDisplay.visibility = View.VISIBLE
