@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/infinum_purple"
-        tools:context=".login.LoginActivity">
+        tools:context=".ui.LoginActivity">
 
         <ImageView
             android:id="@+id/topIllustrationLeft"
@@ -77,7 +77,7 @@
             android:id="@+id/instructionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/size16dp"
             android:layout_marginStart="24dp"
             android:text="@string/login_instruction"
             android:textColor="@color/white"
@@ -97,8 +97,8 @@
             android:textColorHint="@color/white"
             app:boxStrokeColor="@color/selector_textfield_stroke"
             app:hintTextColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructionText"
             >
 
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text16sp"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionDone"
                 />
@@ -126,8 +126,8 @@
             app:endIconMode="password_toggle"
             app:endIconTint="@color/white"
             app:hintTextColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailFieldLayout"
 
             >
@@ -137,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text16sp"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"
                 />
@@ -157,8 +157,8 @@
             android:enabled="false"
             app:backgroundTint="@color/button_selector"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
             />
 

@@ -13,7 +13,7 @@
         android:id="@+id/card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/size16dp"
         app:cardCornerRadius="8dp"
         >
 
@@ -37,7 +37,7 @@
                 android:id="@+id/show_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/size16dp"
                 android:layout_marginTop="14dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -50,8 +50,8 @@
                 android:id="@+id/show_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/size16dp"
+                android:layout_marginTop="@dimen/size16dp"
                 android:layout_marginBottom="8dp"
                 android:textSize="14sp"
                 android:textColor="@color/black"

@@ -29,7 +29,7 @@ the [Infinum Academy android course](https://infinum.academy/courses/android/).
 
 <div> 
     <div >
-        <p>On successfull login the user is met with a display of various shows. The user can (for now) navigate to a display that corresponds to a state where there are no shows to be displayed.
+        <p>On successful login the user is met with a display of various shows. The user can (for now) navigate to a display that corresponds to a state where there are no shows to be displayed. Also, the user has the ability to log out which will bring the user back to the login screen.
         </p>
         <hr/>
     </div>
@@ -43,13 +43,13 @@ the [Infinum Academy android course](https://infinum.academy/courses/android/).
 
 <div> 
     <div >
-        <p>Once the user taps on a show, he is greeted by the display of details for the corresponding show. The details include the title, fitting image, short description, average rating and reviews. The user also has the ability to add a (for now) dummy review. If the user decides that he really wants to add a review, a dialog will be displayed prompting him to confirm that he wants to add the review.
+        <p>Once the user taps on a show, he is greeted by the display of details for the corresponding show. The details include the title, fitting image, short description, average rating, and reviews. The user also has the ability to add a review. Upon clicking the "Write a review" button, a bottom sheet dialog will appear, prompting the user to add a rating of at least one star and write an optional review.
         </p>
         <hr/>
     </div>
         <img style="width : 216px; height: 444" src="screenshots/showDetails1.png">
         <img style="width : 216px; height: 444" src="screenshots/showDetails2.png">
-        <img style="width : 216px; height: 444" src="screenshots/dummyrReview.png">
+        <img style="width : 216px; height: 444" src="screenshots/add_a_review.png">
 </div>
 <hr/>
 Additional features will be implemented according to further instructions from the academy mentors.

@@ -27,4 +27,9 @@
     <string name="get_shows">Get Shows</string>
     <string name="shows_app">Shows App</string>
     <string name="add_review_message">"Are you sure you want to add a new review?"</string>
+    <string name="logout">Log out</string>
+    <string name="add_review">Add a review:</string>
+    <string name="comment">Comment</string>
+    <string name="submit">Submit</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -1,4 +1,4 @@
-package infinuma.android.shows.show_details
+package infinuma.android.shows.ui.show_details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
