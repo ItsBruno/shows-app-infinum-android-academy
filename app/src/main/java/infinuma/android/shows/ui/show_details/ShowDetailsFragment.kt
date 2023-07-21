@@ -64,8 +64,10 @@ class ShowDetailsFragment : Fragment() {
                 showTitle.text = showsTitle
                 showImage.setImageResource(show.imageResourceId)
 
+                //build the dialog only once so multiple instances can't be created at the same time
+                val dialog = buildDialog()
                 reviewButton.setOnClickListener {
-                    buildDialog()
+                    dialog.show()
                 }
                 setSupportActionBar(toolAppBar)
 
@@ -84,7 +86,7 @@ class ShowDetailsFragment : Fragment() {
         attemptInitRecyclerView()
     }
 
-    private fun buildDialog() {
+    private fun buildDialog(): BottomSheetDialog {
         val dialog = BottomSheetDialog(requireContext())
         val dialogAddReviewBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(dialogAddReviewBinding.root)
@@ -104,7 +106,7 @@ class ShowDetailsFragment : Fragment() {
             addReview(ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review))
             dialog.dismiss()
         }
-        dialog.show()
+        return dialog
     }
 
     private fun addReview(review: ShowReview) {

@@ -3,13 +3,23 @@ package infinuma.android.shows.ui.all_shows
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import infinuma.android.shows.R
@@ -19,12 +29,21 @@ import infinuma.android.shows.model.shows
 import infinuma.android.shows.ui.login.LoginFragment
 import infinuma.android.shows.ui.login.LoginFragment.Companion.USER_EMAIL
 import infinuma.android.shows.ui.login.PREFERENCES_NAME
+import infinuma.android.shows.util.FileUtil
+import java.io.File
 
+const val PICTURE_TAKEN = "PICTURE_TAKEN"
 class ShowsFragment : Fragment() {
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var avatarUri: Uri
+    private lateinit var getImage: ActivityResultLauncher<Uri>
 
     private var containsShows = true
+    private var pictureTaken = false
+
+    //used to make sure only a single dialog at a time is created
+    private var profileDialogClosed = true
 
     private var _binding: FragmentShowsBinding? = null
 
@@ -34,8 +53,28 @@ class ShowsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        handleProfilePictureChange()
     }
 
+    private fun handleProfilePictureChange() {
+        pictureTaken = sharedPreferences.getBoolean(PICTURE_TAKEN, false)
+
+        var file = FileUtil.createImageFile(requireContext())
+
+        //if file is null uri won't be initialized
+        if(file != null) {
+            avatarUri = FileProvider.getUriForFile(requireContext(), "${requireContext().applicationContext.packageName}.provider", file)
+        }
+        getImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { pictureSaved ->
+            if (pictureSaved) {
+                file = FileUtil.getImageFile(requireContext())
+                binding.profile.setImageDrawable(Drawable.createFromPath(file?.path))
+                sharedPreferences.edit { putBoolean(PICTURE_TAKEN, true) }
+            } else {
+                Log.e("SavePicture", "Picture not saved")
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,6 +85,12 @@ class ShowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //if the user has taken a picture to change his profile photo display it, otherwise the placeholder is displayed
+        if(pictureTaken) {
+            val file = FileUtil.getImageFile(requireContext())
+            binding.profile.setImageDrawable(Drawable.createFromPath(file?.path))
+        }
 
         initListeners()
         initShowsRecycler()
@@ -63,7 +108,10 @@ class ShowsFragment : Fragment() {
             }
 
             profile.setOnClickListener {
-                buildProfileBottomSheetDialog()
+                if(profileDialogClosed) {
+                    profileDialogClosed = false
+                    buildProfileBottomSheetDialog()
+                }
             }
         }
     }
@@ -71,37 +119,53 @@ class ShowsFragment : Fragment() {
     private fun buildProfileBottomSheetDialog() {
         val dialog = BottomSheetDialog(requireContext())
         val dialogProfileBinding = DialogProfileBinding.inflate(layoutInflater)
-        dialog.setContentView(dialogProfileBinding.root)
+
+        dialog.setOnDismissListener {
+            profileDialogClosed = true
+        }
 
         with(dialogProfileBinding) {
             userEmail.text = sharedPreferences.getString(USER_EMAIL, "")
             changeProfilePictureButton.setOnClickListener {
-                //TODO add open camera and select from gallery functionality
+                takeANewProfilePicture()
+                dialog.dismiss()
             }
 
             logoutButton.setOnClickListener {
-                initLogoutAlertDialog(dialog)
+                initLogoutAlertDialog()
+                dialog.dismiss()
+            }
+            if(pictureTaken) {
+                val file = FileUtil.getImageFile(requireContext())
+                profilePicture.setImageDrawable(Drawable.createFromPath(file?.path))
             }
         }
+
+        dialog.setContentView(dialogProfileBinding.root)
         dialog.show()
     }
 
-    private fun initLogoutAlertDialog(dialog: BottomSheetDialog) {
+    private fun takeANewProfilePicture() {
+        if(this::avatarUri.isInitialized) {
+            getImage.launch(avatarUri)
+        }
+    }
+
+    private fun initLogoutAlertDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.confirm_logout))
             .setMessage(R.string.logout_confirmation_message)
             .setNegativeButton(R.string.no, null)
-            .setPositiveButton(R.string.yes, DialogInterface.OnClickListener { _, _ -> logoutUser(dialog) })
+            .setPositiveButton(R.string.yes, DialogInterface.OnClickListener { _, _ -> logoutUser() })
             .show()
     }
 
-    private fun logoutUser(dialog: BottomSheetDialog) {
+    private fun logoutUser() {
         sharedPreferences.edit {
             putBoolean(LoginFragment.REMEMBER_USER, false)
             putString(LoginFragment.USER_EMAIL, null)
             putString(LoginFragment.USER_PASSWORD, null)
         }
-        dialog.dismiss()
         findNavController().navigate(ShowsFragmentDirections.actionShowDetailsFragmentToLoginFragment())
     }
 
