@@ -33,4 +33,10 @@
     <string name="submit">Submit</string>
     <string name="unknown">Unknown</string>
     <string name="remember_me">Remember me</string>
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="log_out">Log out</string>
+    <string name="logout_confirmation_message">Are you sure you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="confirm_logout">Confirm Logout</string>
 </resources>

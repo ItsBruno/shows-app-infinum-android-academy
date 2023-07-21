@@ -141,7 +141,7 @@
                 android:id="@+id/no_reviews_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="40dp"
+                android:layout_marginVertical="@dimen/size40dp"
                 android:visibility="gone"
                 android:text="@string/no_reviews_yet"
                 android:textSize="17sp"
