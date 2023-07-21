@@ -60,4 +60,5 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.6.0"
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.6.0")
     androidTestImplementation("androidx.navigation:navigation-testing:2.6.0")
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 }

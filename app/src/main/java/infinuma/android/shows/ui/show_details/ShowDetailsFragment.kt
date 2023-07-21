@@ -69,6 +69,9 @@ class ShowDetailsFragment : Fragment() {
                 }
                 setSupportActionBar(toolAppBar)
 
+                toolAppBar.setNavigationOnClickListener {
+                    findNavController().popBackStack()
+                }
             }
 
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
