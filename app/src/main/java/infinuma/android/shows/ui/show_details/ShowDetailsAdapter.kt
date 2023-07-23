@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import infinuma.android.shows.databinding.ReviewCardBinding
 import infinuma.android.shows.model.ShowReview
 
-class ShowDetailsAdapter(private var reviewList: List<ShowReview>) :
-    RecyclerView.Adapter<ShowDetailsAdapter.ShowReviewsViewHolder>() {
+class ShowDetailsAdapter(private var reviewList: List<ShowReview>) : RecyclerView.Adapter<ShowDetailsAdapter.ShowReviewsViewHolder>() {
 
     inner class ShowReviewsViewHolder(private var binding: ReviewCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(review: ShowReview) {

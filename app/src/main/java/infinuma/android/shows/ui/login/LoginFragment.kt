@@ -16,6 +16,7 @@ import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentLoginBinding
 
 const val PREFERENCES_NAME = "Shows"
+
 class LoginFragment : Fragment() {
 
     companion object {
@@ -48,10 +49,14 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
     }
+
     private fun checkUserRemembered() {
         val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
-        if (userRemembered) navigateToShows(sharedPreferences.getString(USER_EMAIL, "Unknown")!!, sharedPreferences.getString(USER_PASSWORD, "")!!)
+        if (userRemembered) navigateToShows(
+            sharedPreferences.getString(USER_EMAIL, "Unknown")!!, sharedPreferences.getString(USER_PASSWORD, "")!!
+        )
     }
+
     private fun initListeners() {
         with(binding) {
 
@@ -103,6 +108,7 @@ class LoginFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun handleUserLoginMemorization() {
         val isValidLogin = validateCredentials()
         if (binding.rememberMeCheckbox.isChecked and isValidLogin) {
@@ -113,6 +119,7 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
     private fun validateEmail(email: String): Boolean {
         val emailRegex = Regex(EMAIL_REGEX)
         return email.matches(emailRegex)
@@ -122,6 +129,7 @@ class LoginFragment : Fragment() {
         val passwordRegex = Regex(PASSWORD_REGEX)
         return password.matches(passwordRegex)
     }
+
     private fun validateCredentials(): Boolean {
         return validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
             binding.passwordField.text.toString().trim()

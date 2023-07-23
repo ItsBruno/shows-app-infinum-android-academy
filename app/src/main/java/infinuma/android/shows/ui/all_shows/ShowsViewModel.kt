@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import infinuma.android.shows.R
 import infinuma.android.shows.model.Show
 
-class ShowsViewModel: ViewModel() {
+class ShowsViewModel : ViewModel() {
 
     private val shows = listOf(
         Show(

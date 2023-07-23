@@ -32,8 +32,7 @@ class ShowDetailsFragment : Fragment() {
     private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -51,7 +50,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun init() {
         showId = args.showId
-        with(requireActivity() as AppCompatActivity){
+        with(requireActivity() as AppCompatActivity) {
             with(binding) {
 
                 //build the dialog only once so multiple instances can't be created at the same time
@@ -76,10 +75,11 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun displayShowDetails() {
-        showsViewModel.getShow(showId).observe(viewLifecycleOwner) {show ->
+        showsViewModel.getShow(showId).observe(viewLifecycleOwner) { show ->
             setShowDisplayValues(show)
         }
     }
+
     private fun setShowDisplayValues(show: Show) {
         with(binding) {
             description.text = show.description
@@ -105,20 +105,22 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            showDetailsViewModel.addReview(showId, ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review))
+            showDetailsViewModel.addReview(
+                showId, ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review)
+            )
             dialog.dismiss()
         }
         return dialog
     }
 
     private fun setRatingObservers() {
-        showDetailsViewModel.getReviews(showId).observe(viewLifecycleOwner) {showReviews ->
+        showDetailsViewModel.getReviews(showId).observe(viewLifecycleOwner) { showReviews ->
             initRecyclerView(showReviews)
             if (showReviews.size <= 1) toggleShowsDisplay(showReviews)
 
             adapter.notifyItemChanged(showReviews.size - 1)
-            showDetailsViewModel.getAverageRating(showId).observe(viewLifecycleOwner){averageRating ->
-                showDetailsViewModel.getNumberOfReviews(showId).observe(viewLifecycleOwner) {numOfReviews ->
+            showDetailsViewModel.getAverageRating(showId).observe(viewLifecycleOwner) { averageRating ->
+                showDetailsViewModel.getNumberOfReviews(showId).observe(viewLifecycleOwner) { numOfReviews ->
                     binding.reviewStats.text = getString(R.string.d_reviews_f_average, numOfReviews, averageRating)
                 }
                 binding.ratingBar.rating = averageRating
@@ -137,6 +139,7 @@ class ShowDetailsFragment : Fragment() {
             }
         }
     }
+
     private fun initRecyclerView(showReviews: List<ShowReview>) {
         with(binding) {
             adapter = ShowDetailsAdapter(showReviews)

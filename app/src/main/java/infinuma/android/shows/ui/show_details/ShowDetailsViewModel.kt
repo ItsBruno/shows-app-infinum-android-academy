@@ -17,16 +17,16 @@ class ShowDetailsViewModel : ViewModel() {
     )
 
     private val _reviewsLiveData = MutableLiveData<List<ShowReview>>()
-    val reviewsLiveData : LiveData<List<ShowReview>> = _reviewsLiveData
+    val reviewsLiveData: LiveData<List<ShowReview>> = _reviewsLiveData
 
     private val _numOfReviewLiveData = MutableLiveData<Int>()
-    val numOfReviewLiveData : LiveData<Int> = _numOfReviewLiveData
+    val numOfReviewLiveData: LiveData<Int> = _numOfReviewLiveData
 
     private val _averageRatingLiveData = MutableLiveData<Float>()
-    val averageRatingLiveData : LiveData<Float> = _averageRatingLiveData
+    val averageRatingLiveData: LiveData<Float> = _averageRatingLiveData
 
     fun getReviews(showId: String): LiveData<List<ShowReview>> {
-        if(reviews[showId] == null) {
+        if (reviews[showId] == null) {
             reviews[showId] = mutableListOf<ShowReview>()
         }
         _reviewsLiveData.value = reviews[showId]
@@ -40,7 +40,7 @@ class ShowDetailsViewModel : ViewModel() {
 
     fun getAverageRating(showId: String): LiveData<Float> {
         _averageRatingLiveData.value = when {
-            reviews.isNotEmpty() -> (1.0 * ((reviews[showId]?.sumOf { it.rating }) ?: 0) / ((reviews[showId]?.size)?: 1)).toFloat()
+            reviews.isNotEmpty() -> (1.0 * ((reviews[showId]?.sumOf { it.rating }) ?: 0) / ((reviews[showId]?.size) ?: 1)).toFloat()
             else -> 0.toFloat()
         }
         return averageRatingLiveData
@@ -59,6 +59,6 @@ class ShowDetailsViewModel : ViewModel() {
     private fun updateLiveData(showId: String) {
         _reviewsLiveData.value = reviews[showId]
         _numOfReviewLiveData.value = (reviews[showId]?.size) ?: 0
-        _averageRatingLiveData.value = (1.0 * ((reviews[showId]?.sumOf { it.rating }) ?: 0) / ((reviews[showId]?.size)?: 1)).toFloat()
+        _averageRatingLiveData.value = (1.0 * ((reviews[showId]?.sumOf { it.rating }) ?: 0) / ((reviews[showId]?.size) ?: 1)).toFloat()
     }
 }
