@@ -9,7 +9,7 @@ the [Infinum Academy android course](https://infinum.academy/courses/android/).
     <div>
         <p>Upon launching the app, the user
             is greeted by the displayed UI
-            containing a login form. The login button is initially disabled and gets updated according to every update of the form
+            containing a login form. The login button is initially disabled and gets updated according to every update of the form. The user has the option to choose whether he wants his login to be remembered or not.
         </p>
         <hr/>
         <br>
@@ -38,6 +38,18 @@ the [Infinum Academy android course](https://infinum.academy/courses/android/).
 </div>
 
 <hr/>
+
+### User profile
+
+<div> 
+    <div >
+        <p>In the right upper corner of the screen the users profile picture is displayed. If the user taps on the profile picture a dialog appears displaying information about the users account. In the dialog the user can log out or change his profile photo. If he wishes to change his profile photo he will be met with an alert dialog prompting him to choose whether he wants to take a new picture or choose one from the gallery.
+        </p>
+        <hr/>
+    </div>
+        <img style="width : 216px; height: 444" src="screenshots/user_profile.png">
+        <img style="width : 216px; height: 444" src="screenshots/change_profile_picture.png">
+</div>
 
 ### Show details
 
