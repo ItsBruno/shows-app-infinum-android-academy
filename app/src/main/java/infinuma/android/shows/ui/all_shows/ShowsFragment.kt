@@ -3,34 +3,30 @@ package infinuma.android.shows.ui.all_shows
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
-import androidx.core.net.toUri
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogProfileBinding
 import infinuma.android.shows.databinding.FragmentShowsBinding
-import infinuma.android.shows.model.shows
 import infinuma.android.shows.ui.login.LoginFragment
-import infinuma.android.shows.ui.login.LoginFragment.Companion.USER_EMAIL
 import infinuma.android.shows.ui.login.PREFERENCES_NAME
+import infinuma.android.shows.ui.show_details.ShowDetailsFragmentArgs
 import infinuma.android.shows.util.FileUtil
-import java.io.File
 
 const val PICTURE_TAKEN = "PICTURE_TAKEN"
 class ShowsFragment : Fragment() {
@@ -50,30 +46,13 @@ class ShowsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ShowsAdapter
+
+    private val viewModel by viewModels<ShowsViewModel>()
+    private val args by navArgs<ShowsFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
         handleProfilePictureChange()
-    }
-
-    private fun handleProfilePictureChange() {
-        pictureTaken = sharedPreferences.getBoolean(PICTURE_TAKEN, false)
-
-        var file = FileUtil.createImageFile(requireContext())
-
-        //if file is null uri won't be initialized
-        if(file != null) {
-            avatarUri = FileProvider.getUriForFile(requireContext(), "${requireContext().applicationContext.packageName}.provider", file)
-        }
-        getImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { pictureSaved ->
-            if (pictureSaved) {
-                file = FileUtil.getImageFile(requireContext())
-                binding.profile.setImageDrawable(Drawable.createFromPath(file?.path))
-                sharedPreferences.edit { putBoolean(PICTURE_TAKEN, true) }
-            } else {
-                Log.e("SavePicture", "Picture not saved")
-            }
-        }
     }
 
     override fun onCreateView(
@@ -100,6 +79,26 @@ class ShowsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun handleProfilePictureChange() {
+        pictureTaken = sharedPreferences.getBoolean(PICTURE_TAKEN, false)
+
+        var file = FileUtil.createImageFile(requireContext())
+
+        //if file is null uri won't be initialized
+        if(file != null) {
+            avatarUri = FileProvider.getUriForFile(requireContext(), "${requireContext().applicationContext.packageName}.provider", file)
+        }
+        getImage = registerForActivityResult(ActivityResultContracts.TakePicture()) { pictureSaved ->
+            if (pictureSaved) {
+                file = FileUtil.getImageFile(requireContext())
+                binding.profile.setImageDrawable(Drawable.createFromPath(file?.path))
+                sharedPreferences.edit { putBoolean(PICTURE_TAKEN, true)
+                pictureTaken = true}
+            } else {
+                Log.e("SavePicture", "Picture not saved")
+            }
+        }
+    }
 
     private fun initListeners() {
         with(binding) {
@@ -125,7 +124,7 @@ class ShowsFragment : Fragment() {
         }
 
         with(dialogProfileBinding) {
-            userEmail.text = sharedPreferences.getString(USER_EMAIL, "")
+            userEmail.text = args.email
             changeProfilePictureButton.setOnClickListener {
                 takeANewProfilePicture()
                 dialog.dismiss()
@@ -185,10 +184,12 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initShowsRecycler() {
-        adapter = ShowsAdapter(shows) { show ->
-            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id)
-            findNavController().navigate(direction)
+        viewModel.showsLivedData.observe(viewLifecycleOwner) {shows ->
+            adapter = ShowsAdapter(shows) { show ->
+                val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id)
+                findNavController().navigate(direction)
+            }
+            binding.recyclerView.adapter = adapter
         }
-        binding.recyclerView.adapter = adapter
     }
 }

@@ -37,10 +37,6 @@ class LoginFragment : Fragment() {
         checkUserRemembered()
     }
 
-    private fun checkUserRemembered() {
-        val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
-        if (userRemembered) findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToShowsFragment())
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,7 +48,10 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
     }
-
+    private fun checkUserRemembered() {
+        val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
+        if (userRemembered) navigateToShows(sharedPreferences.getString(USER_EMAIL, "Unknown")!!, sharedPreferences.getString(USER_PASSWORD, "")!!)
+    }
     private fun initListeners() {
         with(binding) {
 
@@ -90,9 +89,14 @@ class LoginFragment : Fragment() {
 
             loginButton.setOnClickListener {
                 handleUserLoginMemorization()
-                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToShowsFragment())
+                navigateToShows(binding.emailField.text.toString(), binding.passwordField.text.toString())
             }
         }
+    }
+
+    private fun navigateToShows(email: String, password: String) {
+        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email, password)
+        findNavController().navigate(direction)
     }
 
     override fun onDestroyView() {
