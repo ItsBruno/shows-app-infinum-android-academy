@@ -12,7 +12,9 @@
             android:id="@+id/actionLoginFragmentToShowsFragment"
             app:destination="@id/showsFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"/>
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/showsFragment"
@@ -23,13 +25,16 @@
             app:destination="@id/loginFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/showsFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/actionShowsFragmentToShowDetailsFragment"
             app:destination="@id/showDetailsFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"/>
+        <argument
+            android:name="email"
+            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/showDetailsFragment"

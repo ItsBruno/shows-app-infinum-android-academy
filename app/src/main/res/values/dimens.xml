@@ -5,5 +5,7 @@
     <dimen name="horizontal_marign_show_details">24dp</dimen>
     <dimen name="margin_8">8dp</dimen>
     <dimen name="text16sp">16sp</dimen>
+    <dimen name="text24sp">24sp</dimen>
     <dimen name="size16dp">16dp</dimen>
+    <dimen name="size40dp">40dp</dimen>
 </resources>

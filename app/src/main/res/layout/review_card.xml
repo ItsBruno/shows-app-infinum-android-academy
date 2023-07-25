@@ -10,7 +10,7 @@
     android:clipToPadding="false">
 
     <ImageView
-        android:id="@+id/profile_picture"
+        android:id="@+id/profilePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size16dp"
@@ -21,14 +21,14 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/profile_name"
+        android:id="@+id/profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginStart="@dimen/size16dp"
         android:textSize="@dimen/text16sp"
         android:textColor="@color/infinum_purple"
-        app:layout_constraintStart_toEndOf="@id/profile_picture"
+        app:layout_constraintStart_toEndOf="@id/profilePicture"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="neil.the.navy.seal"
         />
@@ -40,13 +40,13 @@
         android:layout_marginTop="32dp"
         android:textSize="@dimen/text16sp"
         android:textColor="@color/infinum_purple"
-        app:layout_constraintEnd_toStartOf="@id/ic_star"
+        app:layout_constraintEnd_toStartOf="@id/icStar"
         app:layout_constraintTop_toTopOf="parent"
 
         tools:text="3"/>
 
     <ImageView
-        android:id="@+id/ic_star"
+        android:id="@+id/icStar"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size16dp"
         android:layout_marginTop="34dp"
@@ -57,7 +57,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/review_comment"
+        android:id="@+id/reviewComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size16dp"
@@ -66,7 +66,7 @@
         android:textSize="@dimen/text16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/profilePicture"
         tools:text="This show was a complete masterpiece, I really liked it."
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

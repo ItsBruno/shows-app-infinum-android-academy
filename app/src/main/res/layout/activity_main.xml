@@ -8,7 +8,7 @@
     tools:context=".ui.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
+        android:id="@+id/navHostFragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -17,6 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/shows_nav_graph"/>
+        app:navGraph="@navigation/main"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

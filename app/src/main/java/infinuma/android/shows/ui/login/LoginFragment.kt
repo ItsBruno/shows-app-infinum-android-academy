@@ -1,5 +1,7 @@
 package infinuma.android.shows.ui.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,21 +9,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.edit
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentLoginBinding
+
+const val PREFERENCES_NAME = "Shows"
 
 class LoginFragment : Fragment() {
 
     companion object {
         const val EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
         const val PASSWORD_REGEX = "^.{6,}$"
+        const val REMEMBER_USER = "REMEMBER_USER"
+        const val USER_EMAIL = "USER_EMAIL"
     }
 
     private var _binding: FragmentLoginBinding? = null
 
     private val binding get() = _binding!!
+
+    private lateinit var sharedPreferences: SharedPreferences
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        checkUserRemembered()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -33,6 +47,13 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListeners()
+    }
+
+    private fun checkUserRemembered() {
+        val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
+        if (userRemembered) navigateToShows(
+            sharedPreferences.getString(USER_EMAIL, "Unknown")!!
+        )
     }
 
     private fun initListeners() {
@@ -64,25 +85,37 @@ class LoginFragment : Fragment() {
             }
 
             emailField.addTextChangedListener {
-                binding.loginButton.isEnabled = validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
-                    binding.passwordField.text.toString().trim()
-                )
+                binding.loginButton.isEnabled = validateCredentials()
             }
             passwordField.addTextChangedListener {
-                binding.loginButton.isEnabled = validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
-                    binding.passwordField.text.toString().trim()
-                )
+                binding.loginButton.isEnabled = validateCredentials()
             }
 
             loginButton.setOnClickListener {
-                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToShowsFragment())
+                handleUserLoginMemorization()
+                navigateToShows(binding.emailField.text.toString())
             }
         }
+    }
+
+    private fun navigateToShows(email: String) {
+        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email)
+        findNavController().navigate(direction)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun handleUserLoginMemorization() {
+        val isValidLogin = validateCredentials()
+        if (binding.rememberMeCheckbox.isChecked and isValidLogin) {
+            sharedPreferences.edit {
+                putBoolean(REMEMBER_USER, true)
+                putString(USER_EMAIL, binding.emailField.text.toString())
+            }
+        }
     }
 
     private fun validateEmail(email: String): Boolean {
@@ -93,6 +126,12 @@ class LoginFragment : Fragment() {
     private fun validatePassword(password: String): Boolean {/*Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and must be at least 6 characters long*/
         val passwordRegex = Regex(PASSWORD_REGEX)
         return password.matches(passwordRegex)
+    }
+
+    private fun validateCredentials(): Boolean {
+        return validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
+            binding.passwordField.text.toString().trim()
+        )
     }
 
     private fun updatePasswordField() {

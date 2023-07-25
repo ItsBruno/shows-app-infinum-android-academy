@@ -4,21 +4,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import infinuma.android.shows.databinding.FragmentShowDetailsBinding
-import infinuma.android.shows.model.getAverageRating
-import infinuma.android.shows.model.getNumberOfReviews
-import infinuma.android.shows.model.reviews
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogAddReviewBinding
 import infinuma.android.shows.model.Show
 import infinuma.android.shows.model.ShowReview
-import infinuma.android.shows.model.shows
+import infinuma.android.shows.ui.all_shows.ShowsViewModel
 
 class ShowDetailsFragment : Fragment() {
 
@@ -29,13 +27,11 @@ class ShowDetailsFragment : Fragment() {
 
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
-    private lateinit var showsTitle: String
-    private lateinit var showId: String
-    private lateinit var show: Show
+    private val showsViewModel by viewModels<ShowsViewModel>()
+    private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -46,42 +42,52 @@ class ShowDetailsFragment : Fragment() {
         init()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun init() {
-        showId = args.showId
-
-        for (showIter in shows) {
-            if (showIter.id == showId) {
-                show = showIter
-                break
-            }
-        }
-
-        showsTitle = show.title
-
-        with(requireActivity() as AppCompatActivity){
+        showDetailsViewModel.setShowId(args.showId)
+        with(requireActivity() as AppCompatActivity) {
             with(binding) {
-                description.text = show.description
-                showTitle.text = showsTitle
-                showImage.setImageResource(show.imageResourceId)
 
+                //build the dialog only once so multiple instances can't be created at the same time
+                val dialog = buildDialog()
                 reviewButton.setOnClickListener {
-                    buildDialog()
+                    dialog.show()
                 }
                 setSupportActionBar(toolAppBar)
 
+                toolAppBar.setNavigationOnClickListener {
+                    findNavController().popBackStack()
+                }
             }
 
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowHomeEnabled(true)
             supportActionBar?.title = ""
         }
+        displayShowDetails()
+        setRatingObservers()
 
-        updateRating()
-
-        attemptInitRecyclerView()
     }
 
-    private fun buildDialog() {
+    private fun displayShowDetails() {
+        showsViewModel.getShow(args.showId).observe(viewLifecycleOwner) { show ->
+            setShowDisplayValues(show)
+        }
+    }
+
+    private fun setShowDisplayValues(show: Show) {
+        with(binding) {
+            description.text = show.description
+            showTitle.text = show.title
+            showImage.setImageResource(show.imageResourceId)
+        }
+    }
+
+    private fun buildDialog(): BottomSheetDialog {
         val dialog = BottomSheetDialog(requireContext())
         val dialogAddReviewBinding = DialogAddReviewBinding.inflate(layoutInflater)
         dialog.setContentView(dialogAddReviewBinding.root)
@@ -98,44 +104,43 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            addReview(ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review))
+            showDetailsViewModel.addReview(
+                ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review)
+            )
             dialog.dismiss()
         }
-        dialog.show()
+        return dialog
     }
 
-    private fun addReview(review: ShowReview) {
-        if (reviews[showId] == null) {
-            reviews[showId] = mutableListOf<ShowReview>()
-        }
-        reviews[showId]!!.add(
-            review
-        )
-        if (reviews[showId]!!.size == 1) attemptInitRecyclerView()
+    private fun setRatingObservers() {
+        showDetailsViewModel.getReviews().observe(viewLifecycleOwner) { showReviews ->
+            initRecyclerView(showReviews)
+            if (showReviews.size <= 1) toggleShowsDisplay(showReviews)
 
-        adapter.notifyItemChanged(reviews[showId]!!.size - 1)
-        updateRating()
-    }
-
-    private fun updateRating() {
-        binding.reviewStats.text = getString(R.string.d_reviews_f_average, getNumberOfReviews(showId), getAverageRating(showId))
-        binding.ratingBar.rating = getAverageRating(showId)
-    }
-
-    private fun attemptInitRecyclerView() {
-        val showReviews = reviews[showId]
-
-        with(binding) {
-            if ((showReviews != null) and (showReviews?.size != 0)) {
-                adapter = ShowDetailsAdapter(showReviews!!)
-                reviewRecyclerView.adapter = adapter
-
-                reviewsPresentDisplay.visibility = View.VISIBLE
-                noReviewsMessage.visibility = View.GONE
-            } else {
-                reviewsPresentDisplay.visibility = View.GONE
-                noReviewsMessage.visibility = View.VISIBLE
+            adapter.notifyItemChanged(showReviews.size - 1)
+            showDetailsViewModel.getRatingInfo().observe(viewLifecycleOwner) { infoPair ->
+                    binding.reviewStats.text = getString(R.string.d_reviews_f_average, infoPair.first, infoPair.second)
+                    binding.ratingBar.rating = infoPair.second
             }
+        }
+    }
+
+    private fun toggleShowsDisplay(showReviews: List<ShowReview>) {
+        with(binding) {
+            if (showReviews.isNotEmpty()) {
+                reviewsPresentDisplay.isVisible = true
+                noReviewsMessage.isVisible = false
+            } else {
+                reviewsPresentDisplay.isVisible = false
+                noReviewsMessage.isVisible = true
+            }
+        }
+    }
+
+    private fun initRecyclerView(showReviews: List<ShowReview>) {
+        with(binding) {
+            adapter = ShowDetailsAdapter(showReviews)
+            reviewRecyclerView.adapter = adapter
         }
     }
 }
