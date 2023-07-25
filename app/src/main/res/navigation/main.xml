@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="infinuma.android.shows.ui.login.LoginFragment"
+        android:name="infinuma.android.shows.ui.authentication.LoginFragment"
         android:label="LoginFragment">
         <action
             android:id="@+id/actionLoginFragmentToShowsFragment"
@@ -15,6 +15,9 @@
             app:exitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/actionLoginFragmentToRegisterFragment"
+            app:destination="@id/registerFragment"/>
     </fragment>
     <fragment
         android:id="@+id/showsFragment"
@@ -43,5 +46,15 @@
         <argument
             android:name="showId"
             app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="infinuma.android.shows.ui.authentication.RegisterFragment"
+        android:label="RegisterFragment">
+        <action
+            android:id="@+id/actionRegisterFragmentToLoginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

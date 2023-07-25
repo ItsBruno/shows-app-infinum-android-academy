@@ -1,4 +1,4 @@
-package infinuma.android.shows.ui.login
+package infinuma.android.shows.ui.authentication
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,6 +14,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentLoginBinding
+import infinuma.android.shows.ui.authentication.LoginFragmentDirections
 
 const val PREFERENCES_NAME = "Shows"
 
@@ -94,6 +95,10 @@ class LoginFragment : Fragment() {
             loginButton.setOnClickListener {
                 handleUserLoginMemorization()
                 navigateToShows(binding.emailField.text.toString())
+            }
+
+            registerButton.setOnClickListener {
+                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
             }
         }
     }

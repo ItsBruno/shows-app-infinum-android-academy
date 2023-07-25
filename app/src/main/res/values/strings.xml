@@ -43,4 +43,6 @@
     <string name="gallery">Gallery</string>
     <string name="select_method">Select a method</string>
     <string name="picture_change_instruction">Take a new picture or select an image from the gallery</string>
+    <string name="register">Register</string>
+    <string name="repeat_password_text">Repeat password</string>
 </resources>

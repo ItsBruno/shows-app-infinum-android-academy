@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -30,8 +29,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogProfileBinding
 import infinuma.android.shows.databinding.FragmentShowsBinding
-import infinuma.android.shows.ui.login.LoginFragment
-import infinuma.android.shows.ui.login.PREFERENCES_NAME
+import infinuma.android.shows.ui.authentication.LoginFragment
+import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
 import infinuma.android.shows.util.FileUtil
 import java.io.File
 
@@ -180,9 +179,6 @@ class ShowsFragment : Fragment() {
     private fun setProfilePicture(imageView: ImageView) {
         val pictureUri = sharedPreferences.getString(createLiteral(args.email), null)?.toUri()
         if (pictureUri != null) {
-            //.setImageURI could be used, but if the user changes photo by camera two times in a row the image will have the same uri
-            // and the imageView will not recognize that the image has changed
-            //imageView.setImageDrawable(Drawable.createFromPath(pictureUri.path))
             Glide.with(requireContext()).load(pictureUri).into(imageView)
         }
         else(imageView.setImageResource(R.drawable.ic_profile_placeholder))
