@@ -18,6 +18,10 @@
         <action
             android:id="@+id/actionLoginFragmentToRegisterFragment"
             app:destination="@id/registerFragment"/>
+        <argument
+            android:name="navFromRegister"
+            app:argType="boolean"
+            android:defaultValue="false"/>
     </fragment>
     <fragment
         android:id="@+id/showsFragment"

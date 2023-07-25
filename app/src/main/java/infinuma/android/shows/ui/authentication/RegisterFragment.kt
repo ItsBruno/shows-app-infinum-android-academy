@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.infinum.academy.playground2023.lecture.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentRegisterBinding
 
@@ -15,6 +18,13 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModels<RegisterViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ApiModule.initRetrofit(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,10 +36,21 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setOnRegistrationResultAction()
         initListeners()
     }
 
+    private fun setOnRegistrationResultAction() {
+        viewModel.registrationResultLiveData.observe(viewLifecycleOwner) {isRegistrationSuccessful ->
+            if(isRegistrationSuccessful) {
+                val direction = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
+                findNavController().navigate(direction)
+            }
+            else {
+                Snackbar.make(binding.root, R.string.registration_unsuccessful, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -89,10 +110,7 @@ class RegisterFragment : Fragment() {
 
             registerButton.setOnClickListener {
 
-                /*TODO
-                  post user to server*/
-
-                findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
+                viewModel.registerUser(emailField.text.toString().trim(), passwordField.text.toString().trim())
             }
         }
     }

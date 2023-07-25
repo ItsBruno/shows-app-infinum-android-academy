@@ -222,7 +222,8 @@ class ShowsFragment : Fragment() {
             putBoolean(LoginFragment.REMEMBER_USER, false)
             putString(LoginFragment.USER_EMAIL, null)
         }
-        findNavController().navigate(ShowsFragmentDirections.actionShowDetailsFragmentToLoginFragment())
+        val direction = ShowsFragmentDirections.actionShowDetailsFragmentToLoginFragment(navFromRegister = false)
+        findNavController().navigate(direction)
     }
 
     private fun toggleRecyclerView() {

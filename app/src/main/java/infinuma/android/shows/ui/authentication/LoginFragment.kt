@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentLoginBinding
 import infinuma.android.shows.ui.authentication.LoginFragmentDirections
@@ -32,6 +34,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var sharedPreferences: SharedPreferences
+    private val args by navArgs<LoginFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -47,6 +50,12 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(args.navFromRegister) {
+            with(binding) {
+                loginText.text = getString(R.string.registration_successful)
+                registerButton.isVisible = false
+            }
+        }
         initListeners()
     }
 

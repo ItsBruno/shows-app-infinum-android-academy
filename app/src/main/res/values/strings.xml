@@ -45,4 +45,6 @@
     <string name="picture_change_instruction">Take a new picture or select an image from the gallery</string>
     <string name="register">Register</string>
     <string name="repeat_password_text">Repeat password</string>
+    <string name="registration_unsuccessful">Registration unsuccessful, please try again.</string>
+    <string name="registration_successful">Registration successful</string>
 </resources>
