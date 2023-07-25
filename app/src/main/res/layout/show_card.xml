@@ -10,7 +10,7 @@
     >
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card_container"
+        android:id="@+id/cardContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/size16dp"
@@ -34,7 +34,7 @@
                 />
 
             <TextView
-                android:id="@+id/show_title"
+                android:id="@+id/showTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/size16dp"
@@ -47,7 +47,7 @@
                 tools:text="Krv nije voda"/>
 
             <TextView
-                android:id="@+id/show_description"
+                android:id="@+id/showDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/size16dp"
@@ -58,7 +58,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/show_title"
+                app:layout_constraintTop_toBottomOf="@+id/showTitle"
                 tools:text="Opis Opis Opis Opis"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

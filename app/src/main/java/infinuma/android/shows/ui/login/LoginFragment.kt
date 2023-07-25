@@ -24,7 +24,6 @@ class LoginFragment : Fragment() {
         const val PASSWORD_REGEX = "^.{6,}$"
         const val REMEMBER_USER = "REMEMBER_USER"
         const val USER_EMAIL = "USER_EMAIL"
-        const val USER_PASSWORD = "USER_PASSWORD"
     }
 
     private var _binding: FragmentLoginBinding? = null
@@ -53,7 +52,7 @@ class LoginFragment : Fragment() {
     private fun checkUserRemembered() {
         val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
         if (userRemembered) navigateToShows(
-            sharedPreferences.getString(USER_EMAIL, "Unknown")!!, sharedPreferences.getString(USER_PASSWORD, "")!!
+            sharedPreferences.getString(USER_EMAIL, "Unknown")!!
         )
     }
 
@@ -94,13 +93,13 @@ class LoginFragment : Fragment() {
 
             loginButton.setOnClickListener {
                 handleUserLoginMemorization()
-                navigateToShows(binding.emailField.text.toString(), binding.passwordField.text.toString())
+                navigateToShows(binding.emailField.text.toString())
             }
         }
     }
 
-    private fun navigateToShows(email: String, password: String) {
-        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email, password)
+    private fun navigateToShows(email: String) {
+        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email)
         findNavController().navigate(direction)
     }
 
@@ -115,7 +114,6 @@ class LoginFragment : Fragment() {
             sharedPreferences.edit {
                 putBoolean(REMEMBER_USER, true)
                 putString(USER_EMAIL, binding.emailField.text.toString())
-                putString(USER_PASSWORD, binding.passwordField.text.toString())
             }
         }
     }

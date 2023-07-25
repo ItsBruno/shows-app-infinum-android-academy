@@ -25,7 +25,7 @@ class ShowsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        val binding = ShowCardBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ShowCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ShowViewHolder(binding)
     }
 

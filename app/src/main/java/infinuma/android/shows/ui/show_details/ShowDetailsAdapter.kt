@@ -21,10 +21,6 @@ class ShowDetailsAdapter(private var reviewList: List<ShowReview>) : RecyclerVie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowReviewsViewHolder {
         val reviewBinding: ReviewCardBinding = ReviewCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        //this is broken, if the items width is set to match_parent, the items width will be compressed which is unexpected, as the width
-        //should be the same as the parents or the recycler views, the method above fixes the issue
-        //val reviewBinding = ReviewCardBinding.inflate(LayoutInflater.from(parent.context))
-
         return ShowReviewsViewHolder(reviewBinding)
     }
 

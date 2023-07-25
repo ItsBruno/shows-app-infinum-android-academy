@@ -10,7 +10,7 @@
     android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/margin_24dp"
@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toTopOf="@id/reviewButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         >
 
         <LinearLayout
@@ -48,7 +48,7 @@
             android:gravity="center_horizontal">
 
             <TextView
-                android:id="@+id/show_title"
+                android:id="@+id/showTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
@@ -60,7 +60,7 @@
                 />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/img_card"
+                android:id="@+id/imgCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
@@ -68,7 +68,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/show_image"
+                    android:id="@+id/showImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/show_image"
@@ -98,14 +98,14 @@
                 />
 
             <LinearLayout
-                android:id="@+id/reviews_present_display"
+                android:id="@+id/reviewsPresentDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
 
                 <TextView
-                    android:id="@+id/review_stats"
+                    android:id="@+id/reviewStats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size16dp"
@@ -116,7 +116,7 @@
                     tools:text="@string/d_reviews_f_average"
                     />
                 <RatingBar
-                    android:id="@+id/rating_bar"
+                    android:id="@+id/ratingBar"
                     style="@style/CustomRatingBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/review_recycler_view"
+                    android:id="@+id/reviewRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -138,7 +138,7 @@
                     />
             </LinearLayout>
             <TextView
-                android:id="@+id/no_reviews_message"
+                android:id="@+id/noReviewsMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/size40dp"
