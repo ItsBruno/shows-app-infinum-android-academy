@@ -1,5 +1,6 @@
 package infinuma.android.shows.ui.show_details
 
+import android.graphics.drawable.Drawable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,12 +12,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.infinum.academy.playground2023.lecture.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogAddReviewBinding
-import infinuma.android.shows.model.Show
-import infinuma.android.shows.model.ShowReview
-import infinuma.android.shows.ui.all_shows.ShowsViewModel
+import infinuma.android.shows.model.networking.Review
+import infinuma.android.shows.model.networking.Show
 
 class ShowDetailsFragment : Fragment() {
 
@@ -27,8 +33,18 @@ class ShowDetailsFragment : Fragment() {
 
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
-    private val showsViewModel by viewModels<ShowsViewModel>()
     private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        handleApiRequests()
+    }
+
+    private fun handleApiRequests() {
+        ApiModule.initRetrofit(requireContext())
+        showDetailsViewModel.getShowInfo(args.showId, args.accessToken, args.client, args.uid)
+        showDetailsViewModel.getReviews(args.showId, args.accessToken, args.client, args.uid)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,7 +64,6 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun init() {
-        showDetailsViewModel.setShowId(args.showId)
         with(requireActivity() as AppCompatActivity) {
             with(binding) {
 
@@ -69,13 +84,14 @@ class ShowDetailsFragment : Fragment() {
             supportActionBar?.title = ""
         }
         displayShowDetails()
-        setRatingObservers()
-
+        displayReviews()
     }
 
     private fun displayShowDetails() {
-        showsViewModel.getShow(args.showId).observe(viewLifecycleOwner) { show ->
-            setShowDisplayValues(show)
+        showDetailsViewModel.showLiveData.observe(viewLifecycleOwner) { show ->
+            if(show != null) { //in case live data value is not set yet
+                setShowDisplayValues(show)
+            }
         }
     }
 
@@ -83,7 +99,41 @@ class ShowDetailsFragment : Fragment() {
         with(binding) {
             description.text = show.description
             showTitle.text = show.title
-            showImage.setImageResource(show.imageResourceId)
+            ratingBar.rating = show.averageRating
+            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating)
+            Glide
+                .with(requireContext())
+                .load(show.imageUrl)
+                .placeholder(R.drawable.white_background)
+                .listener(object: RequestListener<Drawable> {
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        loadingSpinner.isVisible = false
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        loadingSpinner.isVisible = false
+                        return false
+                    }
+                })
+                .into(showImage)
+        }
+    }
+
+    private fun displayReviews() {
+        showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) {reviews ->
+            initRecyclerView(reviews)
         }
     }
 
@@ -104,40 +154,14 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            showDetailsViewModel.addReview(
+            /*showDetailsViewModel.addReview(
                 ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review)
-            )
+            )*/
             dialog.dismiss()
         }
         return dialog
     }
-
-    private fun setRatingObservers() {
-        showDetailsViewModel.getReviews().observe(viewLifecycleOwner) { showReviews ->
-            initRecyclerView(showReviews)
-            if (showReviews.size <= 1) toggleShowsDisplay(showReviews)
-
-            adapter.notifyItemChanged(showReviews.size - 1)
-            showDetailsViewModel.getRatingInfo().observe(viewLifecycleOwner) { infoPair ->
-                    binding.reviewStats.text = getString(R.string.d_reviews_f_average, infoPair.first, infoPair.second)
-                    binding.ratingBar.rating = infoPair.second
-            }
-        }
-    }
-
-    private fun toggleShowsDisplay(showReviews: List<ShowReview>) {
-        with(binding) {
-            if (showReviews.isNotEmpty()) {
-                reviewsPresentDisplay.isVisible = true
-                noReviewsMessage.isVisible = false
-            } else {
-                reviewsPresentDisplay.isVisible = false
-                noReviewsMessage.isVisible = true
-            }
-        }
-    }
-
-    private fun initRecyclerView(showReviews: List<ShowReview>) {
+    private fun initRecyclerView(showReviews: List<Review>) {
         with(binding) {
             adapter = ShowDetailsAdapter(showReviews)
             reviewRecyclerView.adapter = adapter

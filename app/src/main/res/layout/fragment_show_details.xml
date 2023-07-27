@@ -61,7 +61,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/imgCard"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
                 app:cardCornerRadius="32dp"
@@ -69,10 +69,17 @@
 
                 <ImageView
                     android:id="@+id/showImage"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/show_image"
-                    tools:src="@drawable/ic_office"/>
+                    tools:src="@drawable/ic_office"
+                    android:scaleType="fitCenter"/>
+                <ProgressBar
+                    android:id="@+id/loadingSpinner"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -127,7 +134,6 @@
                     android:isIndicator="true"
                     tools:rating="3"
                     />
-
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewRecyclerView"

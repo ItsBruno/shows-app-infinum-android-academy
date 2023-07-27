@@ -26,6 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.infinum.academy.playground2023.lecture.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogProfileBinding
 import infinuma.android.shows.databinding.FragmentShowsBinding
@@ -42,12 +43,10 @@ class ShowsFragment : Fragment() {
     private lateinit var avatarUri: Uri
     private var file: File? = null
     private lateinit var renamedFile: File
-    private lateinit var galleryPictureUri: Uri
     private lateinit var snapAnImage: ActivityResultLauncher<Uri>
     private lateinit var pickAnImage: ActivityResultLauncher<PickVisualMediaRequest>
 
-    private var containsShows = true
-    private var profilePictureChanged = false
+    private var containsShows = false
 
     //used to make sure only a single dialog at a time is created
     private var profileDialogClosed = true
@@ -63,7 +62,13 @@ class ShowsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        handeApiCalls()
         handleProfilePictureChange()
+    }
+
+    private fun handeApiCalls() {
+        ApiModule.initRetrofit(requireContext())
+        viewModel.getShows(args.accessToken, args.client, args.uid)
     }
 
     override fun onCreateView(
@@ -84,6 +89,7 @@ class ShowsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        containsShows = false
         super.onDestroyView()
         _binding = null
     }
@@ -137,10 +143,6 @@ class ShowsFragment : Fragment() {
 
     private fun initListeners() {
         with(binding) {
-            noShows.setOnClickListener {
-                toggleRecyclerView()
-            }
-
             profile.setOnClickListener {
                 if (profileDialogClosed) {
                     profileDialogClosed = false
@@ -221,6 +223,9 @@ class ShowsFragment : Fragment() {
         sharedPreferences.edit {
             putBoolean(LoginFragment.REMEMBER_USER, false)
             putString(LoginFragment.USER_EMAIL, null)
+            putString(LoginFragment.ACCESS_TOKEN, null)
+            putString(LoginFragment.CLIENT, null)
+            putString(LoginFragment.UID, null)
         }
         val direction = ShowsFragmentDirections.actionShowDetailsFragmentToLoginFragment(navFromRegister = false)
         findNavController().navigate(direction)
@@ -229,25 +234,26 @@ class ShowsFragment : Fragment() {
     private fun toggleRecyclerView() {
         with(binding) {
             if (containsShows) {
-                recyclerView.isVisible = false
-                noShowsDisplay.isVisible = true
-                noShows.text = getString(R.string.get_shows)
-            } else {
                 recyclerView.isVisible = true
                 noShowsDisplay.isVisible = false
-                noShows.text = getString(R.string.no_shows)
+            } else {
+                recyclerView.isVisible = false
+                noShowsDisplay.isVisible = true
             }
         }
-        containsShows = !containsShows
     }
 
     private fun initShowsRecycler() {
-        viewModel.showsLivedData.observe(viewLifecycleOwner) { shows ->
-            adapter = ShowsAdapter(shows) { show ->
-                val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id)
-                findNavController().navigate(direction)
+        viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
+            if(shows != null) {
+                adapter = ShowsAdapter(shows) { show ->
+                    val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
+                    findNavController().navigate(direction)
+                }
+                binding.recyclerView.adapter = adapter
+                containsShows = true
+                toggleRecyclerView()
             }
-            binding.recyclerView.adapter = adapter
         }
     }
 }

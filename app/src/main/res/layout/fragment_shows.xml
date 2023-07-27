@@ -64,11 +64,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/noShows"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/show_card"
+        android:visibility="gone"
         />
 
     <ImageView
@@ -78,7 +79,7 @@
         android:layout_marginBottom="26dp"
         android:src="@drawable/ic_shows_empty_state"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/noShows"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"/>
@@ -97,28 +98,11 @@
         app:layout_constraintTop_toBottomOf="@id/emptyState"
         />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/noShows"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size40dp"
-        android:layout_marginVertical="@dimen/margin_8"
-        android:text="@string/no_shows"
-        android:textSize="@dimen/text16sp"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/purple_color"
-        app:cornerRadius="@dimen/size16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
     <androidx.constraintlayout.widget.Group
         android:id="@+id/noShowsDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="emptyState, message"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

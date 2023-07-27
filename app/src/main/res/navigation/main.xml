@@ -42,6 +42,15 @@
         <argument
             android:name="email"
             app:argType="string"/>
+        <argument
+            android:name="accessToken"
+            app:argType="string"/>
+        <argument
+            android:name="client"
+            app:argType="string"/>
+        <argument
+            android:name="uid"
+            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/showDetailsFragment"
@@ -49,6 +58,15 @@
         android:label="ShowDetailsFragment">
         <argument
             android:name="showId"
+            app:argType="string"/>
+        <argument
+            android:name="accessToken"
+            app:argType="string"/>
+        <argument
+            android:name="client"
+            app:argType="string"/>
+        <argument
+            android:name="uid"
             app:argType="string"/>
     </fragment>
     <fragment

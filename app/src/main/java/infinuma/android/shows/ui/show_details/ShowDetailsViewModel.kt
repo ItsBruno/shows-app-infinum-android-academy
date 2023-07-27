@@ -1,70 +1,61 @@
 package infinuma.android.shows.ui.show_details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.infinum.academy.playground2023.lecture.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.model.ShowReview
+import infinuma.android.shows.model.networking.Review
+import infinuma.android.shows.model.networking.Show
+import infinuma.android.shows.model.networking.ShowInfoResponse
+import java.io.IOException
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class ShowDetailsViewModel : ViewModel() {
 
-    private var showId: String? = null
+    private val _reviewsLiveData = MutableLiveData<List<Review>>()
+    val reviewsLiveData: LiveData<List<Review>> = _reviewsLiveData
 
-    private val reviews = mutableMapOf<String, MutableList<ShowReview>>(
-        "Show1" to mutableListOf<ShowReview>(
-            ShowReview(R.drawable.ic_profile_placeholder, "Groot", 5, "I am Groot"),
-            ShowReview(R.drawable.ic_profile_placeholder, "Mr. White", 3, "Breaking bad is a much better show."),
-            ShowReview(R.drawable.ic_profile_placeholder, "Jesse", 2, "I almost fell asleep")
-        ),
-        "Show2" to mutableListOf<ShowReview>(ShowReview(R.drawable.ic_profile_placeholder, "Jimmy Joe", 5, "This is a cool show")),
-    )
+    private val _showLiveData = MutableLiveData<Show>()
+    val showLiveData: LiveData<Show> = _showLiveData
 
-    fun setShowId(showId: String) {
-        this.showId = showId
-    }
-
-    private val _reviewsLiveData = MutableLiveData<List<ShowReview>>()
-    val reviewsLiveData: LiveData<List<ShowReview>> = _reviewsLiveData
-
-    private val _ratingInfoLiveData = MutableLiveData<Pair<Int, Float>>()
-    val ratingInfoLiveData: LiveData<Pair<Int, Float>> = _ratingInfoLiveData
-
-    fun getRatingInfo(): LiveData<Pair<Int, Float>> {
-        _ratingInfoLiveData.value = Pair(getNumberOfReviews(), getAverageRating())
-        return ratingInfoLiveData
-    }
-
-    fun getReviews(): LiveData<List<ShowReview>> {
-        if (reviews[showId] == null) {
-            reviews[showId!!] = mutableListOf<ShowReview>()
-        }
-        _reviewsLiveData.value = reviews[showId]
-        return reviewsLiveData
-    }
-
-    private fun getNumberOfReviews(): Int {
-        return (reviews[showId]?.size) ?: 0
-    }
-
-    private fun getAverageRating(): Float {
-        return when {
-            reviews.isNotEmpty() -> (1.0 * ((reviews[showId]?.sumOf { it.rating }) ?: 0) / ((reviews[showId]?.size) ?: 1)).toFloat()
-            else -> 0.toFloat()
+    fun getShowInfo(showId: String, accessToken: String, client: String, uid:String) {
+        viewModelScope.launch {
+            try {
+                _showLiveData.value = fetchShowInfo(showId, accessToken, client, uid)
+            } catch(err: Exception) {
+                Log.e("EXCEPTION", err.toString())
+            }
         }
     }
 
-    fun addReview(review: ShowReview) {
-        if (reviews[showId!!] == null) {
-            reviews[showId!!] = mutableListOf<ShowReview>()
+    private suspend fun fetchShowInfo(showId: String, accessToken: String, client: String, uid:String): Show {
+        val response = ApiModule.retrofit.getShowInfo(showId = showId, accessToken = accessToken, client = client, uid = uid)
+        if(!response.isSuccessful) {
+            throw IOException("Shows fetch failed")
         }
-        reviews[showId]!!.add(
-            review
-        )
-        updateLiveData(showId!!)
+        return response.body()!!.show
     }
 
-    private fun updateLiveData(showId: String) {
-        _reviewsLiveData.value = reviews[showId]
-        _ratingInfoLiveData.value = Pair(getNumberOfReviews(), getAverageRating())
+    fun getReviews(showId: String, accessToken: String, client: String, uid:String) {
+        viewModelScope.launch {
+            try {
+                _reviewsLiveData.value = fetchReviews(showId, accessToken, client, uid)
+            } catch (err: Exception) {
+                Log.e("EXCEPTION", err.toString())
+            }
+        }
+    }
+
+    private suspend fun fetchReviews(showId: String, accessToken: String, client: String, uid:String): List<Review> {
+        val result = ApiModule.retrofit.getReviews(showId = showId, accessToken = accessToken, client = client, uid = uid, page = 2)
+        if(!result.isSuccessful) {
+            throw IOException("Unable to get reviews")
+        }
+        return result.body()!!.reviews
     }
 }
