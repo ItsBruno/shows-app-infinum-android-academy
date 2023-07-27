@@ -39,4 +39,9 @@ class ShowDetailsAdapter(private var reviewList: List<Review>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ShowReviewsViewHolder, position: Int) {
         holder.bind(reviewList[position])
     }
+
+    fun updateData(newRevies: List<Review>) {
+        reviewList = newRevies
+        notifyDataSetChanged()
+    }
 }

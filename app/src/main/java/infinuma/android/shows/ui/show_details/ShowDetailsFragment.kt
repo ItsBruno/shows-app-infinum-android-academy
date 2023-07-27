@@ -37,13 +37,14 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showDetailsViewModel.setSessionInfo(args.accessToken, args.client, args.uid)
         handleApiRequests()
     }
 
     private fun handleApiRequests() {
         ApiModule.initRetrofit(requireContext())
-        showDetailsViewModel.getShowInfo(args.showId, args.accessToken, args.client, args.uid)
-        showDetailsViewModel.getReviews(args.showId, args.accessToken, args.client, args.uid)
+        showDetailsViewModel.getShowInfo(args.showId)
+        showDetailsViewModel.getReviews(args.showId, 0)
     }
 
     override fun onCreateView(
@@ -89,7 +90,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun displayShowDetails() {
         showDetailsViewModel.showLiveData.observe(viewLifecycleOwner) { show ->
-            if(show != null) { //in case live data value is not set yet
+            if (show != null) { //in case live data value is not set yet
                 setShowDisplayValues(show)
             }
         }
@@ -99,13 +100,13 @@ class ShowDetailsFragment : Fragment() {
         with(binding) {
             description.text = show.description
             showTitle.text = show.title
-            ratingBar.rating = show.averageRating
-            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating)
+            ratingBar.rating = show.averageRating?: 0f
+            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating?: 0f)
             Glide
                 .with(requireContext())
                 .load(show.imageUrl)
                 .placeholder(R.drawable.white_background)
-                .listener(object: RequestListener<Drawable> {
+                .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
@@ -132,8 +133,12 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun displayReviews() {
-        showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) {reviews ->
-            initRecyclerView(reviews)
+        with(binding) {
+            adapter = ShowDetailsAdapter(emptyList())
+            reviewRecyclerView.adapter = adapter
+            showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) { reviews ->
+                adapter.updateData(reviews)
+            }
         }
     }
 
@@ -154,17 +159,11 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            /*showDetailsViewModel.addReview(
-                ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review)
-            )*/
+            showDetailsViewModel.addReview(args.showId, rating, review)
+            showDetailsViewModel.getReviews(args.showId, 1000)
             dialog.dismiss()
         }
         return dialog
     }
-    private fun initRecyclerView(showReviews: List<Review>) {
-        with(binding) {
-            adapter = ShowDetailsAdapter(showReviews)
-            reviewRecyclerView.adapter = adapter
-        }
-    }
+
 }

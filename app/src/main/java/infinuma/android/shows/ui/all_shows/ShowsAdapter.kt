@@ -71,4 +71,8 @@ class ShowsAdapter(
         holder.bind(shows[position])
     }
 
+    fun updateData(newShows: List<Show>) {
+        shows = newShows
+        notifyItemRangeChanged(shows.size - newShows.size, shows.size - 1)
+    }
 }

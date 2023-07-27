@@ -12,36 +12,44 @@ import java.io.IOException
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
+const val PAGE_SIZE = 20
 class ShowsViewModel : ViewModel() {
+
+    private var page = 0
+    private var fetching = false
 
     private val _showsLiveData = MutableLiveData<List<Show>>()
     val showsLiveData: LiveData<List<Show>> = _showsLiveData
 
-    private val _showsFetchSuccessfulLiveData = MutableLiveData<Boolean>()
-    val showsFetchSuccessfulLiveData: LiveData<Boolean> = _showsFetchSuccessfulLiveData
-
-    private val _showLiveData = MutableLiveData<Show>()
-    val showLiveData: LiveData<Show> = _showLiveData
-
     fun getShows(accessToken: String, client: String, uid: String) {
+        if((page < 5) and (!fetching)) {
+            page++
+            fetching = true
+        }
+        else return
         viewModelScope.launch {
             try {
-                val response = sentGetShowsRequest(accessToken, client, uid)
-                _showsFetchSuccessfulLiveData.value = true
-                _showsLiveData.value = response.body()?.shows
+                val shows = sentGetShowsRequest(accessToken, client, uid)
+                if(_showsLiveData.value == null) {
+                    _showsLiveData.value = listOf<Show>()
+                }
+                if(!shows.isNullOrEmpty()){
+                    val oldShows = _showsLiveData.value
+                    _showsLiveData.value = oldShows!! + shows
+                }
+                fetching = false
             } catch(err: Exception) {
                 Log.e("EXCEPTION", err.toString())
-                _showsFetchSuccessfulLiveData.value = false
             }
         }
     }
 
-    private suspend fun sentGetShowsRequest(accessToken: String, client: String, uid: String): Response<ListShowsResponse> {
-        val response = ApiModule.retrofit.getShows(accessToken, client, uid)
+    private suspend fun sentGetShowsRequest(accessToken: String, client: String, uid: String): List<Show>? {
+        val response = ApiModule.retrofit.getShows(accessToken, client, uid, page = page, items = PAGE_SIZE)
         if(!response.isSuccessful) {
             throw IOException("Failed to get shows")
         }
-        return response
+        return response.body()?.shows
     }
 
 }

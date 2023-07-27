@@ -24,6 +24,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.infinum.academy.playground2023.lecture.networking.ApiModule
@@ -149,6 +151,24 @@ class ShowsFragment : Fragment() {
                     buildProfileBottomSheetDialog()
                 }
             }
+
+            val layoutManager = LinearLayoutManager(context)
+            recyclerView.layoutManager = layoutManager
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                    ) {
+                        viewModel.getShows(args.accessToken, args.client, args.uid)
+                    }
+                }
+            })
         }
     }
 
@@ -244,13 +264,14 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initShowsRecycler() {
+        adapter = ShowsAdapter(emptyList()) { show ->
+            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
+            findNavController().navigate(direction)
+        }
+        binding.recyclerView.adapter = adapter
         viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
             if(shows != null) {
-                adapter = ShowsAdapter(shows) { show ->
-                    val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
-                    findNavController().navigate(direction)
-                }
-                binding.recyclerView.adapter = adapter
+                adapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
             }
