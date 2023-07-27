@@ -58,6 +58,7 @@ class ShowsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ShowsAdapter
+    private lateinit var topRatedShowsAdapter: ShowsAdapter
 
     private val viewModel by viewModels<ShowsViewModel>()
     private val args by navArgs<ShowsFragmentArgs>()
@@ -87,7 +88,26 @@ class ShowsFragment : Fragment() {
         setProfilePicture(binding.profile)
 
         initListeners()
-        initShowsRecycler()
+        initShowsRecyclerAdapter()
+        initTopRatedShowsRecyclerAdapter()
+        displayShows()
+        displayTopRatedShows()
+        handleChip()
+    }
+
+    private fun handleChip() {
+        with(binding) {
+
+           chip.setOnCheckedChangeListener{ _, isChecked ->
+                if(isChecked) {
+                    viewModel.getTopRatedShows(args.accessToken, args.client, args.uid)
+                    recyclerView.adapter = topRatedShowsAdapter
+                }
+               else {
+                   recyclerView.adapter = adapter
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -263,15 +283,34 @@ class ShowsFragment : Fragment() {
         }
     }
 
-    private fun initShowsRecycler() {
+    private fun initShowsRecyclerAdapter() {
         adapter = ShowsAdapter(emptyList()) { show ->
             val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
             findNavController().navigate(direction)
         }
         binding.recyclerView.adapter = adapter
+    }
+
+    private fun initTopRatedShowsRecyclerAdapter() {
+        topRatedShowsAdapter = ShowsAdapter(emptyList()) { show ->
+            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
+            findNavController().navigate(direction)
+        }
+    }
+    private fun displayShows() {
         viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
             if(shows != null) {
                 adapter.updateData(shows)
+                containsShows = true
+                toggleRecyclerView()
+            }
+        }
+    }
+
+    private fun displayTopRatedShows() {
+        viewModel.showsTopLiveData.observe(viewLifecycleOwner) { shows ->
+            if(shows != null) {
+                topRatedShowsAdapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
             }

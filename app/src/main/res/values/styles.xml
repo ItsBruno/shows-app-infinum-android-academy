@@ -30,4 +30,10 @@
         <item name="android:textColor">@color/auth_buttons_text_color</item>
         <item name="android:textSize">@dimen/text16sp</item>
     </style>
+    <style name="chipStyle">
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipStrokeColor">@color/purple_color</item>
+        <item name="chipStrokeWidth">2dp</item>
+    </style>
+
 </resources>

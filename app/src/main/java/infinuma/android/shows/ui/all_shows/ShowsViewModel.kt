@@ -21,6 +21,9 @@ class ShowsViewModel : ViewModel() {
     private val _showsLiveData = MutableLiveData<List<Show>>()
     val showsLiveData: LiveData<List<Show>> = _showsLiveData
 
+    private val _showsTopLiveData = MutableLiveData<List<Show>>()
+    val showsTopLiveData: LiveData<List<Show>> = _showsTopLiveData
+
     fun getShows(accessToken: String, client: String, uid: String) {
         if((page < 5) and (!fetching)) {
             page++
@@ -29,7 +32,7 @@ class ShowsViewModel : ViewModel() {
         else return
         viewModelScope.launch {
             try {
-                val shows = sentGetShowsRequest(accessToken, client, uid)
+                val shows = sendGetShowsRequest(accessToken, client, uid)
                 if(_showsLiveData.value == null) {
                     _showsLiveData.value = listOf<Show>()
                 }
@@ -44,7 +47,25 @@ class ShowsViewModel : ViewModel() {
         }
     }
 
-    private suspend fun sentGetShowsRequest(accessToken: String, client: String, uid: String): List<Show>? {
+    fun getTopRatedShows(accessToken: String, client: String, uid: String) {
+        viewModelScope.launch {
+            try {
+                _showsTopLiveData.value = sentGetTopShowsRequest(accessToken, client, uid)
+            } catch(err: Exception) {
+                Log.e("EXCEPTION", err.toString())
+            }
+        }
+    }
+
+    private suspend fun sentGetTopShowsRequest(accessToken: String, client: String, uid: String): List<Show>? {
+        val response = ApiModule.retrofit.getTopRatedShows(accessToken, client, uid, items = PAGE_SIZE)
+        if(!response.isSuccessful) {
+            throw IOException("Failed to get top rated shows")
+        }
+        return response.body()?.shows
+    }
+
+    private suspend fun sendGetShowsRequest(accessToken: String, client: String, uid: String): List<Show>? {
         val response = ApiModule.retrofit.getShows(accessToken, client, uid, page = page, items = PAGE_SIZE)
         if(!response.isSuccessful) {
             throw IOException("Failed to get shows")
