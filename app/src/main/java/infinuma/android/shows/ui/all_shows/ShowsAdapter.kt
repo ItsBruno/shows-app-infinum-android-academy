@@ -12,7 +12,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ShowCardBinding
-import infinuma.android.shows.model.networking.Show
+import infinuma.android.shows.model.networking.response.Show
+import infinuma.android.shows.util.MyRequestListener
 
 class ShowsAdapter(
     private var shows: List<Show>, private val onShowClickCallback: (Show) -> Unit
@@ -31,28 +32,7 @@ class ShowsAdapter(
                     .with(itemView.context)
                     .load(show.imageUrl)
                     .placeholder(R.drawable.white_background)
-                    .listener(object: RequestListener<Drawable> {
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            loadingSpinner.isVisible = false
-                            return false
-                        }
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            loadingSpinner.isVisible = false
-                            return false
-                        }
-                    })
+                    .listener(MyRequestListener(loadingSpinner))
                     .into(image)
             }
         }

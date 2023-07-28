@@ -1,5 +1,7 @@
 package infinuma.android.shows.ui.show_details
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,11 +20,14 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
+import com.google.android.material.snackbar.Snackbar
+import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogAddReviewBinding
-import infinuma.android.shows.model.networking.Review
-import infinuma.android.shows.model.networking.Show
+import infinuma.android.shows.model.networking.response.Show
+import infinuma.android.shows.ui.authentication.LoginFragment
+import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
+import infinuma.android.shows.util.MyRequestListener
 
 class ShowDetailsFragment : Fragment() {
 
@@ -34,17 +39,29 @@ class ShowDetailsFragment : Fragment() {
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
     private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var accessToken: String
+    private lateinit var client: String
+    private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        showDetailsViewModel.setSessionInfo(args.accessToken, args.client, args.uid)
+        sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        getSessionInfo()
         handleApiRequests()
     }
 
+    private fun getSessionInfo() {
+        accessToken = sharedPreferences.getString(LoginFragment.ACCESS_TOKEN, "")!!
+        client = sharedPreferences.getString(LoginFragment.CLIENT, "")!!
+        uid = sharedPreferences.getString(LoginFragment.UID, "")!!
+    }
+
     private fun handleApiRequests() {
-        ApiModule.initRetrofit(requireContext())
+        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
         showDetailsViewModel.getShowInfo(args.showId)
-        showDetailsViewModel.getReviews(args.showId, 0)
+        showDetailsViewModel.getReviews(args.showId)
     }
 
     override fun onCreateView(
@@ -94,6 +111,11 @@ class ShowDetailsFragment : Fragment() {
                 setShowDisplayValues(show)
             }
         }
+        showDetailsViewModel.showFetchSuccessLiveData.observe(viewLifecycleOwner) {fetchSuccess ->
+            if(!fetchSuccess) {
+                Snackbar.make(binding.root, R.string.shows_fetch_fail, Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setShowDisplayValues(show: Show) {
@@ -106,28 +128,7 @@ class ShowDetailsFragment : Fragment() {
                 .with(requireContext())
                 .load(show.imageUrl)
                 .placeholder(R.drawable.white_background)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        loadingSpinner.isVisible = false
-                        return false
-                    }
-
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        loadingSpinner.isVisible = false
-                        return false
-                    }
-                })
+                .listener(MyRequestListener(loadingSpinner))
                 .into(showImage)
         }
     }
@@ -137,7 +138,21 @@ class ShowDetailsFragment : Fragment() {
             adapter = ShowDetailsAdapter(emptyList())
             reviewRecyclerView.adapter = adapter
             showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) { reviews ->
-                adapter.updateData(reviews)
+                if(!reviews.isNullOrEmpty()) {
+                    adapter.updateData(reviews)
+                    if(noReviewsMessage.isVisible) {
+                        reviewsPresentDisplay.isVisible = true
+                        noReviewsMessage.isVisible = false
+                    }
+                } else {
+                    reviewsPresentDisplay.isVisible = false
+                    noReviewsMessage.isVisible = true
+                }
+            }
+            showDetailsViewModel.reviewAddedLiveData.observe(viewLifecycleOwner) {reviewAdded ->
+                if(!reviewAdded) {
+                    Snackbar.make(binding.root, R.string.review_add_fail, Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -160,7 +175,6 @@ class ShowDetailsFragment : Fragment() {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
             showDetailsViewModel.addReview(args.showId, rating, review)
-            showDetailsViewModel.getReviews(args.showId, 1000)
             dialog.dismiss()
         }
         return dialog

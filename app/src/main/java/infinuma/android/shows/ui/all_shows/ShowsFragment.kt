@@ -19,7 +19,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -28,14 +27,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
+import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogProfileBinding
 import infinuma.android.shows.databinding.FragmentShowsBinding
 import infinuma.android.shows.ui.authentication.LoginFragment
+import infinuma.android.shows.ui.authentication.LoginFragment.Companion.ACCESS_TOKEN
+import infinuma.android.shows.ui.authentication.LoginFragment.Companion.CLIENT
+import infinuma.android.shows.ui.authentication.LoginFragment.Companion.UID
 import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
 import infinuma.android.shows.util.FileUtil
+import infinuma.android.shows.util.getRealPathFromURI
 import java.io.File
+import okio.Path.Companion.toPath
 
 const val PFP_URI_NAME_DECORATOR = "ProfilePicture"
 
@@ -47,6 +51,9 @@ class ShowsFragment : Fragment() {
     private lateinit var renamedFile: File
     private lateinit var snapAnImage: ActivityResultLauncher<Uri>
     private lateinit var pickAnImage: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var accessToken: String
+    private lateinit var client: String
+    private lateinit var uid: String
 
     private var containsShows = false
 
@@ -65,13 +72,20 @@ class ShowsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        getSessionInfo()
         handeApiCalls()
         handleProfilePictureChange()
     }
 
+    private fun getSessionInfo() {
+        accessToken = sharedPreferences.getString(ACCESS_TOKEN, "")!!
+        client = sharedPreferences.getString(CLIENT, "")!!
+        uid = sharedPreferences.getString(UID, "")!!
+    }
+
     private fun handeApiCalls() {
-        ApiModule.initRetrofit(requireContext())
-        viewModel.getShows(args.accessToken, args.client, args.uid)
+        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
+        viewModel.getShows()
     }
 
     override fun onCreateView(
@@ -84,8 +98,8 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //if the user has taken a picture to change his profile photo display it, otherwise the placeholder is displayed
         setProfilePicture(binding.profile)
+        viewModel.getMyInfo()
 
         initListeners()
         initShowsRecyclerAdapter()
@@ -98,13 +112,12 @@ class ShowsFragment : Fragment() {
     private fun handleChip() {
         with(binding) {
 
-           chip.setOnCheckedChangeListener{ _, isChecked ->
-                if(isChecked) {
-                    viewModel.getTopRatedShows(args.accessToken, args.client, args.uid)
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    viewModel.getTopRatedShows()
                     recyclerView.adapter = topRatedShowsAdapter
-                }
-               else {
-                   recyclerView.adapter = adapter
+                } else {
+                    recyclerView.adapter = adapter
                 }
             }
         }
@@ -141,10 +154,9 @@ class ShowsFragment : Fragment() {
                 file!!.renameTo(renamedFile)
 
                 //remember the profile picture for the given email
-                sharedPreferences.edit { putString(createLiteral(args.email), renamedFile.toUri().toString()) }
+                sharedPreferences.edit { putString(createLiteral(args.email), renamedFile.path.toString()) }
 
-                setProfilePicture(binding.profile)
-
+                uploadPfp()
             } else {
                 Log.e("SavePicture", "Picture not saved")
             }
@@ -154,12 +166,20 @@ class ShowsFragment : Fragment() {
     private fun pickAnImageRegister() {
         pickAnImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                sharedPreferences.edit { putString(createLiteral(args.email), uri.toString()) }
-
+                val path = getRealPathFromURI(uri, requireContext())
+                Log.i("PATH", path.toString())
+                sharedPreferences.edit { putString(createLiteral(args.email), path) }
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 requireContext().contentResolver.takePersistableUriPermission(uri, flag)
-                setProfilePicture(binding.profile)
+                uploadPfp()
             }
+        }
+    }
+
+    private fun uploadPfp() {
+        val picturePath = sharedPreferences.getString(createLiteral(args.email), null)?.toPath()
+        if (picturePath != null) {
+            viewModel.uploadProfilePicture(picturePath.toFile())
         }
     }
 
@@ -185,7 +205,7 @@ class ShowsFragment : Fragment() {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0
                     ) {
-                        viewModel.getShows(args.accessToken, args.client, args.uid)
+                        viewModel.getShows()
                     }
                 }
             })
@@ -219,11 +239,11 @@ class ShowsFragment : Fragment() {
     }
 
     private fun setProfilePicture(imageView: ImageView) {
-        val pictureUri = sharedPreferences.getString(createLiteral(args.email), null)?.toUri()
-        if (pictureUri != null) {
-            Glide.with(requireContext()).load(pictureUri).into(imageView)
+        viewModel.pfpUrlLiveData.observe(viewLifecycleOwner) { pictureUrl ->
+            if (pictureUrl != null) {
+                Glide.with(requireContext()).load(pictureUrl).placeholder(R.drawable.ic_profile_placeholder).into(imageView)
+            }
         }
-        else(imageView.setImageResource(R.drawable.ic_profile_placeholder))
     }
 
     private fun showPictureChangeAlertDialog() {
@@ -285,7 +305,7 @@ class ShowsFragment : Fragment() {
 
     private fun initShowsRecyclerAdapter() {
         adapter = ShowsAdapter(emptyList()) { show ->
-            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
+            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id)
             findNavController().navigate(direction)
         }
         binding.recyclerView.adapter = adapter
@@ -293,13 +313,14 @@ class ShowsFragment : Fragment() {
 
     private fun initTopRatedShowsRecyclerAdapter() {
         topRatedShowsAdapter = ShowsAdapter(emptyList()) { show ->
-            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id, args.accessToken, args.client, args.uid)
+            val direction = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(show.id)
             findNavController().navigate(direction)
         }
     }
+
     private fun displayShows() {
         viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
-            if(shows != null) {
+            if (shows != null) {
                 adapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
@@ -309,11 +330,11 @@ class ShowsFragment : Fragment() {
 
     private fun displayTopRatedShows() {
         viewModel.showsTopLiveData.observe(viewLifecycleOwner) { shows ->
-            if(shows != null) {
+            if (shows != null) {
                 topRatedShowsAdapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
             }
         }
     }
-}
+    }

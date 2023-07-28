@@ -5,13 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
-import infinuma.android.shows.model.networking.AuthResponse
-import infinuma.android.shows.model.networking.LoginRequest
+import infinuma.android.shows.networking.ApiModule
+import infinuma.android.shows.model.networking.response.AuthResponse
+import infinuma.android.shows.model.networking.request.LoginRequest
 import java.io.IOException
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
+const val ACCESS_HEADER = "access-token"
+const val CLIENT_HEADER = "client"
+const val UID_HEADER = "uid"
 class LoginViewModel: ViewModel() {
 
     data class sessionData(
@@ -33,9 +36,9 @@ class LoginViewModel: ViewModel() {
                 val response = postLoginRequest(email, password)
                 _loginSuccessfulLiveData.value = true
                 _sessionLiveData.value = sessionData(
-                    accessToken = response.headers()["access-token"]?: "",
-                    client = response.headers()["client"]?: "",
-                    uid = response.headers()["uid"]?: ""
+                    accessToken = response.headers()[ACCESS_HEADER]?: "",
+                    client = response.headers()[CLIENT_HEADER]?: "",
+                    uid = response.headers()[UID_HEADER]?: ""
                 )
 
             } catch (err: Exception) {

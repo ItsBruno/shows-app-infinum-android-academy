@@ -23,7 +23,7 @@
             android:background="@color/white"
             >
 
-            <RelativeLayout
+            <FrameLayout
                 android:id="@+id/imageCont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,8 +44,8 @@
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
+                    android:layout_gravity="center"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/showTitle"

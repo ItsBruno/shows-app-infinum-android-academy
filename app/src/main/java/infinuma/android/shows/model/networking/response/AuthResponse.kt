@@ -1,4 +1,4 @@
-package infinuma.android.shows.model.networking
+package infinuma.android.shows.model.networking.response
 
 import kotlinx.serialization.SerialName
 
@@ -11,5 +11,5 @@ data class AuthResponse(
 data class User(
     @SerialName("id") val id: String,
     @SerialName("email") val email: String,
-    @SerialName("image_url") val imageUrl: String?,
+    @SerialName("image_url") val imageUrl: String? = null,
 )

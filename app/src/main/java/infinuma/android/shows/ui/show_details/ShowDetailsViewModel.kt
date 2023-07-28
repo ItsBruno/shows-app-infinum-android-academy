@@ -1,22 +1,17 @@
 package infinuma.android.shows.ui.show_details
 
-import android.media.Rating
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
-import infinuma.android.shows.R
-import infinuma.android.shows.model.ShowReview
-import infinuma.android.shows.model.networking.AddReviewRequest
-import infinuma.android.shows.model.networking.Review
-import infinuma.android.shows.model.networking.Show
-import infinuma.android.shows.model.networking.ShowInfoResponse
+import infinuma.android.shows.networking.ApiModule
+import infinuma.android.shows.model.networking.request.AddReviewRequest
+import infinuma.android.shows.model.networking.response.Review
+import infinuma.android.shows.model.networking.response.Show
 import java.io.IOException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class ShowDetailsViewModel : ViewModel() {
 
@@ -33,33 +28,28 @@ class ShowDetailsViewModel : ViewModel() {
     private val _reviewAddedLiveData = MutableLiveData<Boolean>()
     val reviewAddedLiveData: LiveData<Boolean> = _reviewAddedLiveData
 
-    fun setSessionInfo(accessToken: String, client: String, uid: String) {
-        this.accessToken = accessToken
-        this.client = client
-        this.uid = uid
-    }
+    private val _showFetchSuccessLiveData = MutableLiveData<Boolean>()
+    val showFetchSuccessLiveData: LiveData<Boolean> = _showFetchSuccessLiveData
+
     fun getShowInfo(showId: String) {
         viewModelScope.launch {
             try {
                 _showLiveData.value = fetchShowInfo(showId)
+                _showFetchSuccessLiveData.value = true
             } catch (err: Exception) {
                 Log.e("EXCEPTION", err.toString())
+                _showFetchSuccessLiveData.value = false
             }
         }
     }
 
     private suspend fun fetchShowInfo(showId: String): Show {
-        val response = ApiModule.retrofit.getShowInfo(showId = showId, accessToken = accessToken, client = client, uid = uid)
-        if (!response.isSuccessful) {
-            throw IOException("Shows fetch failed")
-        }
-        return response.body()!!.show
+        val response = ApiModule.retrofit.getShowInfo(showId = showId)
+        return response.show
     }
 
-    fun getReviews(showId: String, delay: Long) {
+    fun getReviews(showId: String) {
         viewModelScope.launch {
-            //The delay is required for displaying the review after it is added.
-            delay(delay)
             try {
                 _reviewsLiveData.value = fetchReviews(showId)
             } catch (err: Exception) {
@@ -69,7 +59,7 @@ class ShowDetailsViewModel : ViewModel() {
     }
 
     private suspend fun fetchReviews(showId: String): List<Review> {
-        val result = ApiModule.retrofit.getReviews(showId = showId, accessToken = accessToken, client = client, uid = uid)
+        val result = ApiModule.retrofit.getReviews(showId = showId)
         if (!result.isSuccessful) {
             throw IOException("Unable to get reviews")
         }
@@ -92,11 +82,13 @@ class ShowDetailsViewModel : ViewModel() {
         rating: Int, comment: String, showId: String
     ): Boolean {
         val response = ApiModule.retrofit.addReview(
-            accessToken, client, uid, request = AddReviewRequest(rating = rating, comment = comment, showId = showId)
+           request = AddReviewRequest(rating = rating, comment = comment, showId = showId)
         )
         if(!response.isSuccessful) {
             throw IOException("Cannot add review")
         }
+        getReviews(showId)
+        getShowInfo(showId)
         return true
     }
 }

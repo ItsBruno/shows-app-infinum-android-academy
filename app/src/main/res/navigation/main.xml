@@ -17,7 +17,9 @@
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/actionLoginFragmentToRegisterFragment"
-            app:destination="@id/registerFragment"/>
+            app:destination="@id/registerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
         <argument
             android:name="navFromRegister"
             app:argType="boolean"
@@ -42,15 +44,6 @@
         <argument
             android:name="email"
             app:argType="string"/>
-        <argument
-            android:name="accessToken"
-            app:argType="string"/>
-        <argument
-            android:name="client"
-            app:argType="string"/>
-        <argument
-            android:name="uid"
-            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/showDetailsFragment"
@@ -58,15 +51,6 @@
         android:label="ShowDetailsFragment">
         <argument
             android:name="showId"
-            app:argType="string"/>
-        <argument
-            android:name="accessToken"
-            app:argType="string"/>
-        <argument
-            android:name="client"
-            app:argType="string"/>
-        <argument
-            android:name="uid"
             app:argType="string"/>
     </fragment>
     <fragment
@@ -77,6 +61,8 @@
             android:id="@+id/actionRegisterFragmentToLoginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 </navigation>

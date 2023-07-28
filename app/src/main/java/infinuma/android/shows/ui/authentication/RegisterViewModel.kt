@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
-import infinuma.android.shows.model.networking.RegisterRequest
+import infinuma.android.shows.networking.ApiModule
+import infinuma.android.shows.model.networking.request.RegisterRequest
 import java.io.IOException
 import kotlinx.coroutines.launch
 

@@ -16,10 +16,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
+import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentLoginBinding
-import infinuma.android.shows.ui.authentication.LoginFragmentDirections
 
 const val PREFERENCES_NAME = "Shows"
 
@@ -69,10 +68,7 @@ class LoginFragment : Fragment() {
                 viewModel.sessionLiveData.observe(viewLifecycleOwner) { sessionData ->
                     handleUserLoginMemorization(sessionData.accessToken, sessionData.client, sessionData.uid)
                     navigateToShows(
-                        binding.emailField.text.toString(),
-                        sessionData.accessToken,
-                        sessionData.client,
-                        sessionData.uid
+                        binding.emailField.text.toString()
                     )
                 }
             } else {
@@ -94,14 +90,8 @@ class LoginFragment : Fragment() {
     private fun checkUserRemembered() {
         val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
         if (userRemembered) {
-            /*with(sharedPreferences) {
-                viewModel.loginUser(getString(USER_EMAIL, ""), getString(USER_PASSWORD, ""))
-            }*/
             navigateToShows(
-                    sharedPreferences.getString(USER_EMAIL, "Unknown")!!,
-                    sharedPreferences.getString(ACCESS_TOKEN, "")!!,
-                    sharedPreferences.getString(CLIENT, "")!!,
-                    sharedPreferences.getString(UID, "")!!
+                    sharedPreferences.getString(USER_EMAIL, "Unknown")!!
                 )
         }
 
@@ -154,8 +144,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun navigateToShows(email: String, accessToken: String, client: String, uid: String) {
-        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email, accessToken, client, uid)
+    private fun navigateToShows(email: String) {
+        val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email)
         findNavController().navigate(direction)
     }
 
@@ -165,15 +155,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleUserLoginMemorization(accessToken: String, client: String, uid: String) {
-        if (binding.rememberMeCheckbox.isChecked) {
             sharedPreferences.edit {
-                putBoolean(REMEMBER_USER, true)
-                putString(USER_EMAIL, binding.emailField.text.toString())
+                if (binding.rememberMeCheckbox.isChecked) {
+                    putBoolean(REMEMBER_USER, true)
+                    putString(USER_EMAIL, binding.emailField.text.toString())
+                }
                 putString(ACCESS_TOKEN, accessToken)
                 putString(CLIENT, client)
                 putString(UID, uid)
             }
-        }
     }
 
     private fun validateEmail(email: String): Boolean {

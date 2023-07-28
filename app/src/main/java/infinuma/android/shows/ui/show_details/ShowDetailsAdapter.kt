@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ReviewCardBinding
-import infinuma.android.shows.model.ShowReview
-import infinuma.android.shows.model.networking.Review
+import infinuma.android.shows.model.networking.response.Review
 
 class ShowDetailsAdapter(private var reviewList: List<Review>) : RecyclerView.Adapter<ShowDetailsAdapter.ShowReviewsViewHolder>() {
 

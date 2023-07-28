@@ -49,4 +49,7 @@
     <string name="registration_successful">Registration successful</string>
     <string name="login_unsuccessful_message">Login unsuccessful, please register if you don\'t have an account.</string>
     <string name="top_rated">Top rated</string>
+    <string name="shows_fetch_fail">Failed to get shows</string>
+    <string name="review_add_fail">Failed to add a review</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
 </resources>

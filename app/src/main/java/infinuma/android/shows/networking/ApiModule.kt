@@ -1,8 +1,7 @@
-package com.infinum.academy.playground2023.lecture.networking
+package infinuma.android.shows.networking
 
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import infinuma.android.shows.networking.ShowsApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -16,8 +15,19 @@ object ApiModule {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun initRetrofit(context: Context) {
+    fun initRetrofit(context: Context, accessToken: String  = "", client: String = "", uid: String = "") {
         val okhttp = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val originalRequest = chain.request()
+
+                val newRequest = originalRequest.newBuilder()
+                    .header("access-token", accessToken)
+                    .header("client", client)
+                    .header("uid", uid)
+                    .build()
+
+                chain.proceed(newRequest)
+            }
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })

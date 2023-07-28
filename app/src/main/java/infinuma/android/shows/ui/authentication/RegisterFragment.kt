@@ -10,7 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.infinum.academy.playground2023.lecture.networking.ApiModule
+import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentRegisterBinding
 
@@ -163,7 +163,7 @@ class RegisterFragment : Fragment() {
     private fun updatePasswordsFields() {
         with(binding) {
             if (!checkPasswordsMatch()) {
-                repeatPasswordFieldLayout.error = "Passwords don't match"
+                repeatPasswordFieldLayout.error = getString(R.string.passwords_dont_match)
                 repeatPasswordFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
                 passwordField.setText("")
                 repeatPasswordField.setText("")
