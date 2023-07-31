@@ -2,12 +2,12 @@ package infinuma.android.shows.ui.show_details
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import infinuma.android.shows.databinding.FragmentShowDetailsBinding
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,19 +15,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
+import infinuma.android.shows.ShowsApplication
 import infinuma.android.shows.databinding.DialogAddReviewBinding
 import infinuma.android.shows.model.networking.response.Show
+import infinuma.android.shows.ui.ShowsViewModelFactory
 import infinuma.android.shows.ui.authentication.LoginFragment
 import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
 import infinuma.android.shows.util.MyRequestListener
+import infinuma.android.shows.util.isInternetAvailable
 
 class ShowDetailsFragment : Fragment() {
 
@@ -38,7 +37,10 @@ class ShowDetailsFragment : Fragment() {
 
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
-    private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels{
+        ShowsViewModelFactory((requireContext().applicationContext as ShowsApplication).database)
+    }
+
     private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var accessToken: String
@@ -50,6 +52,7 @@ class ShowDetailsFragment : Fragment() {
         sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
         getSessionInfo()
         handleApiRequests()
+        showDetailsViewModel.setImageDir(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
     }
 
     private fun getSessionInfo() {
@@ -60,8 +63,8 @@ class ShowDetailsFragment : Fragment() {
 
     private fun handleApiRequests() {
         ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
-        showDetailsViewModel.getShowInfo(args.showId)
-        showDetailsViewModel.getReviews(args.showId)
+        showDetailsViewModel.getShowInfo(args.showId, isInternetAvailable(requireContext()))
+        showDetailsViewModel.getReviews(args.showId, isInternetAvailable(requireContext()))
     }
 
     override fun onCreateView(

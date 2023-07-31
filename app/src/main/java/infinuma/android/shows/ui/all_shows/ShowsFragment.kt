@@ -17,6 +17,7 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.core.view.isVisible
@@ -27,10 +28,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
+import infinuma.android.shows.ShowsApplication
 import infinuma.android.shows.databinding.DialogProfileBinding
 import infinuma.android.shows.databinding.FragmentShowsBinding
+import infinuma.android.shows.ui.ShowsViewModelFactory
 import infinuma.android.shows.ui.authentication.LoginFragment
 import infinuma.android.shows.ui.authentication.LoginFragment.Companion.ACCESS_TOKEN
 import infinuma.android.shows.ui.authentication.LoginFragment.Companion.CLIENT
@@ -38,6 +42,7 @@ import infinuma.android.shows.ui.authentication.LoginFragment.Companion.UID
 import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
 import infinuma.android.shows.util.FileUtil
 import infinuma.android.shows.util.getRealPathFromURI
+import infinuma.android.shows.util.isInternetAvailable
 import java.io.File
 import okio.Path.Companion.toPath
 
@@ -67,7 +72,9 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var topRatedShowsAdapter: ShowsAdapter
 
-    private val viewModel by viewModels<ShowsViewModel>()
+    private val viewModel: ShowsViewModel by viewModels{
+        ShowsViewModelFactory((requireContext().applicationContext as ShowsApplication).database)
+    }
     private val args by navArgs<ShowsFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +82,7 @@ class ShowsFragment : Fragment() {
         getSessionInfo()
         handeApiCalls()
         handleProfilePictureChange()
+        viewModel.setImageDir(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES))
     }
 
     private fun getSessionInfo() {
@@ -85,7 +93,9 @@ class ShowsFragment : Fragment() {
 
     private fun handeApiCalls() {
         ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
-        viewModel.getShows()
+        val internetAvailable = isInternetAvailable(requireContext())
+        Log.i("NETWORK", "Internet available: $internetAvailable")
+        viewModel.getShows(internetAvailable)
     }
 
     override fun onCreateView(
@@ -99,7 +109,7 @@ class ShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setProfilePicture(binding.profile)
-        viewModel.getMyInfo()
+        viewModel.getMyProfile()
 
         initListeners()
         initShowsRecyclerAdapter()
@@ -107,6 +117,7 @@ class ShowsFragment : Fragment() {
         displayShows()
         displayTopRatedShows()
         handleChip()
+        setApiResultsObservers()
     }
 
     private fun handleChip() {
@@ -114,11 +125,16 @@ class ShowsFragment : Fragment() {
 
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    viewModel.getTopRatedShows()
+                    viewModel.getTopRatedShows(isInternetAvailable(requireContext()))
                     recyclerView.adapter = topRatedShowsAdapter
+                    containsShows = !topRatedShowsAdapter.isEmpty()
+
                 } else {
+                    viewModel.getShows(isInternetAvailable(requireContext()))
                     recyclerView.adapter = adapter
+                    containsShows = !adapter.isEmpty()
                 }
+                toggleRecyclerView()
             }
         }
     }
@@ -156,7 +172,7 @@ class ShowsFragment : Fragment() {
                 //remember the profile picture for the given email
                 sharedPreferences.edit { putString(createLiteral(args.email), renamedFile.path.toString()) }
 
-                uploadPfp()
+                uploadProfilePicture()
             } else {
                 Log.e("SavePicture", "Picture not saved")
             }
@@ -171,12 +187,12 @@ class ShowsFragment : Fragment() {
                 sharedPreferences.edit { putString(createLiteral(args.email), path) }
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 requireContext().contentResolver.takePersistableUriPermission(uri, flag)
-                uploadPfp()
+                uploadProfilePicture()
             }
         }
     }
 
-    private fun uploadPfp() {
+    private fun uploadProfilePicture() {
         val picturePath = sharedPreferences.getString(createLiteral(args.email), null)?.toPath()
         if (picturePath != null) {
             viewModel.uploadProfilePicture(picturePath.toFile())
@@ -205,7 +221,9 @@ class ShowsFragment : Fragment() {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0
                     ) {
-                        viewModel.getShows()
+                        if(isInternetAvailable(requireContext())) {
+                            viewModel.getShows(isInternetAvailable(requireContext()))
+                        }
                     }
                 }
             })
@@ -324,6 +342,9 @@ class ShowsFragment : Fragment() {
                 adapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
+            } else {
+                containsShows = false
+                toggleRecyclerView()
             }
         }
     }
@@ -334,7 +355,34 @@ class ShowsFragment : Fragment() {
                 topRatedShowsAdapter.updateData(shows)
                 containsShows = true
                 toggleRecyclerView()
+            } else {
+                containsShows = false
+                toggleRecyclerView()
             }
         }
     }
+
+    private fun setApiResultsObservers() {
+        viewModel.getShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
+            if(!success) {
+                makeSnackbar(R.string.get_shows_failed)
+            }
+        }
+        viewModel.getTopShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
+            if(!success) {
+                makeSnackbar(R.string.get_top_shows_failed)
+            }
+        }
+        viewModel.getMyProfileSuccessLiveData.observe(viewLifecycleOwner) {success ->
+            if(!success) {
+                makeSnackbar(R.string.get_profile_failed)
+            }
+        }
+        viewModel.profilePictureUploadSuccessLiveData.observe(viewLifecycleOwner) {success ->
+            if(!success) {
+                makeSnackbar(R.string.upload_picture_failed)
+            }
+        }
     }
+    private fun makeSnackbar(message: Int) = Snackbar.make(binding.root, getString(message), Snackbar.LENGTH_SHORT).show()
+}

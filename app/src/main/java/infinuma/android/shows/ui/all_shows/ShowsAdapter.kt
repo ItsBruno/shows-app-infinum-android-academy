@@ -53,6 +53,10 @@ class ShowsAdapter(
 
     fun updateData(newShows: List<Show>) {
         shows = newShows
-        notifyItemRangeChanged(shows.size - newShows.size, shows.size - 1)
+        notifyDataSetChanged()
+    }
+
+    fun isEmpty(): Boolean {
+        return shows.isEmpty()
     }
 }
