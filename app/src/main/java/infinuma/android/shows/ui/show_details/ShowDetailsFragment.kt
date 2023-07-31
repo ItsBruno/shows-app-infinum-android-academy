@@ -1,5 +1,8 @@
 package infinuma.android.shows.ui.show_details
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,12 +14,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
+import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.DialogAddReviewBinding
-import infinuma.android.shows.model.Show
-import infinuma.android.shows.model.ShowReview
-import infinuma.android.shows.ui.all_shows.ShowsViewModel
+import infinuma.android.shows.model.networking.response.Show
+import infinuma.android.shows.ui.authentication.LoginFragment
+import infinuma.android.shows.ui.authentication.PREFERENCES_NAME
+import infinuma.android.shows.util.MyRequestListener
 
 class ShowDetailsFragment : Fragment() {
 
@@ -27,8 +38,31 @@ class ShowDetailsFragment : Fragment() {
 
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
-    private val showsViewModel by viewModels<ShowsViewModel>()
     private val showDetailsViewModel by viewModels<ShowDetailsViewModel>()
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var accessToken: String
+    private lateinit var client: String
+    private lateinit var uid: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+        getSessionInfo()
+        handleApiRequests()
+    }
+
+    private fun getSessionInfo() {
+        accessToken = sharedPreferences.getString(LoginFragment.ACCESS_TOKEN, "")!!
+        client = sharedPreferences.getString(LoginFragment.CLIENT, "")!!
+        uid = sharedPreferences.getString(LoginFragment.UID, "")!!
+    }
+
+    private fun handleApiRequests() {
+        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
+        showDetailsViewModel.getShowInfo(args.showId)
+        showDetailsViewModel.getReviews(args.showId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,7 +82,6 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun init() {
-        showDetailsViewModel.setShowId(args.showId)
         with(requireActivity() as AppCompatActivity) {
             with(binding) {
 
@@ -69,13 +102,19 @@ class ShowDetailsFragment : Fragment() {
             supportActionBar?.title = ""
         }
         displayShowDetails()
-        setRatingObservers()
-
+        displayReviews()
     }
 
     private fun displayShowDetails() {
-        showsViewModel.getShow(args.showId).observe(viewLifecycleOwner) { show ->
-            setShowDisplayValues(show)
+        showDetailsViewModel.showLiveData.observe(viewLifecycleOwner) { show ->
+            if (show != null) { //in case live data value is not set yet
+                setShowDisplayValues(show)
+            }
+        }
+        showDetailsViewModel.showFetchSuccessLiveData.observe(viewLifecycleOwner) {fetchSuccess ->
+            if(!fetchSuccess) {
+                Snackbar.make(binding.root, R.string.shows_fetch_fail, Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -83,7 +122,38 @@ class ShowDetailsFragment : Fragment() {
         with(binding) {
             description.text = show.description
             showTitle.text = show.title
-            showImage.setImageResource(show.imageResourceId)
+            ratingBar.rating = show.averageRating?: 0f
+            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating?: 0f)
+            Glide
+                .with(requireContext())
+                .load(show.imageUrl)
+                .placeholder(R.drawable.white_background)
+                .listener(MyRequestListener(loadingSpinner))
+                .into(showImage)
+        }
+    }
+
+    private fun displayReviews() {
+        with(binding) {
+            adapter = ShowDetailsAdapter(emptyList())
+            reviewRecyclerView.adapter = adapter
+            showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) { reviews ->
+                if(!reviews.isNullOrEmpty()) {
+                    adapter.updateData(reviews)
+                    if(noReviewsMessage.isVisible) {
+                        reviewsPresentDisplay.isVisible = true
+                        noReviewsMessage.isVisible = false
+                    }
+                } else {
+                    reviewsPresentDisplay.isVisible = false
+                    noReviewsMessage.isVisible = true
+                }
+            }
+            showDetailsViewModel.reviewAddedLiveData.observe(viewLifecycleOwner) {reviewAdded ->
+                if(!reviewAdded) {
+                    Snackbar.make(binding.root, R.string.review_add_fail, Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -104,43 +174,10 @@ class ShowDetailsFragment : Fragment() {
         dialogAddReviewBinding.submitButton.setOnClickListener {
             val rating = dialogAddReviewBinding.ratingBar.rating.toInt()
             val review = dialogAddReviewBinding.reviewInput.text.toString().trim()
-            showDetailsViewModel.addReview(
-                ShowReview(R.drawable.ic_profile_placeholder, getString(R.string.unknown), rating, review)
-            )
+            showDetailsViewModel.addReview(args.showId, rating, review)
             dialog.dismiss()
         }
         return dialog
     }
 
-    private fun setRatingObservers() {
-        showDetailsViewModel.getReviews().observe(viewLifecycleOwner) { showReviews ->
-            initRecyclerView(showReviews)
-            if (showReviews.size <= 1) toggleShowsDisplay(showReviews)
-
-            adapter.notifyItemChanged(showReviews.size - 1)
-            showDetailsViewModel.getRatingInfo().observe(viewLifecycleOwner) { infoPair ->
-                    binding.reviewStats.text = getString(R.string.d_reviews_f_average, infoPair.first, infoPair.second)
-                    binding.ratingBar.rating = infoPair.second
-            }
-        }
-    }
-
-    private fun toggleShowsDisplay(showReviews: List<ShowReview>) {
-        with(binding) {
-            if (showReviews.isNotEmpty()) {
-                reviewsPresentDisplay.isVisible = true
-                noReviewsMessage.isVisible = false
-            } else {
-                reviewsPresentDisplay.isVisible = false
-                noReviewsMessage.isVisible = true
-            }
-        }
-    }
-
-    private fun initRecyclerView(showReviews: List<ShowReview>) {
-        with(binding) {
-            adapter = ShowDetailsAdapter(showReviews)
-            reviewRecyclerView.adapter = adapter
-        }
-    }
 }

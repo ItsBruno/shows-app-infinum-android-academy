@@ -1,10 +1,19 @@
 package infinuma.android.shows.ui.all_shows
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import infinuma.android.shows.R
 import infinuma.android.shows.databinding.ShowCardBinding
-import infinuma.android.shows.model.Show
+import infinuma.android.shows.model.networking.response.Show
+import infinuma.android.shows.util.MyRequestListener
 
 class ShowsAdapter(
     private var shows: List<Show>, private val onShowClickCallback: (Show) -> Unit
@@ -19,7 +28,12 @@ class ShowsAdapter(
                 showTitle.text = show.title
                 showDescription.text = show.description
 
-                image.setImageResource(show.imageResourceId)
+                Glide
+                    .with(itemView.context)
+                    .load(show.imageUrl)
+                    .placeholder(R.drawable.white_background)
+                    .listener(MyRequestListener(loadingSpinner))
+                    .into(image)
             }
         }
     }
@@ -37,4 +51,8 @@ class ShowsAdapter(
         holder.bind(shows[position])
     }
 
+    fun updateData(newShows: List<Show>) {
+        shows = newShows
+        notifyItemRangeChanged(shows.size - newShows.size, shows.size - 1)
+    }
 }

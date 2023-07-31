@@ -8,4 +8,5 @@
     <dimen name="text24sp">24sp</dimen>
     <dimen name="size16dp">16dp</dimen>
     <dimen name="size40dp">40dp</dimen>
+    <dimen name="size32dp">32dp</dimen>
 </resources>

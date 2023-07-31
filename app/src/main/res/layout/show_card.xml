@@ -23,15 +23,29 @@
             android:background="@color/white"
             >
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/imageCont"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/krv_nije_voda"
-                />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/krv_nije_voda"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/loadingSpinner"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/showTitle"
@@ -43,7 +57,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image"
+                app:layout_constraintTop_toBottomOf="@+id/imageCont"
                 tools:text="Krv nije voda"/>
 
             <TextView

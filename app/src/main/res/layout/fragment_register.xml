@@ -6,13 +6,12 @@
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/infinum_purple"
-        tools:context=".ui.LoginActivity">
+        tools:context=".ui.authentication/RegisterFragment">
 
         <ImageView
             android:id="@+id/topIllustrationLeft"
@@ -60,30 +59,17 @@
             />
 
         <TextView
-            android:id="@+id/loginText"
+            android:id="@+id/registerText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="125dp"
             android:layout_marginStart="@dimen/margin_24dp"
-            android:text="@string/login_activity_name"
+            android:text="@string/register"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="34sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/triangleIllustration"
-            />
-
-        <TextView
-            android:id="@+id/instructionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size16dp"
-            android:layout_marginStart="@dimen/margin_24dp"
-            android:text="@string/login_instruction"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginText"
             />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -99,7 +85,7 @@
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructionText"
+            app:layout_constraintTop_toBottomOf="@id/registerText"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -143,53 +129,52 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/remember_me_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="@dimen/margin_24dp"
-            android:layout_marginTop="@dimen/margin_8"
-            android:text="@string/remember_me"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text16sp"
-            style="@style/Widget.App.CheckBox"
-            />
-
-        <Button
-            android:id="@+id/loginButton"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/repeatPasswordFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="22dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginTop="155dp"
-            android:text="@string/login"
-            android:background="@drawable/rounded_button"
-            android:enabled="false"
-            app:backgroundTint="@color/button_selector"
+            android:layout_marginHorizontal="@dimen/margin_24dp"
+            android:layout_marginTop="@dimen/margin_24dp"
+            android:hint="@string/repeat_password_text"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/selector_textfield_stroke"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
+            app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox"
-            style="@style/AuthButtonsTextStyle"
-            />
+            app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/repeatPasswordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text16sp"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/registerButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="22dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginTop="@dimen/margin_24dp"
+            android:layout_marginHorizontal="@dimen/margin_24dp"
+            android:layout_marginBottom="@dimen/size32dp"
+            android:layout_marginTop="155dp"
             android:text="@string/register"
-            android:textAllCaps="false"
-            android:background="@drawable/register_button_in_login"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text16sp"
+            android:background="@drawable/rounded_button"
+            android:enabled="false"
+            app:backgroundTint="@color/button_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginButton"
+            app:layout_constraintTop_toBottomOf="@id/repeatPasswordFieldLayout"
+            style="@style/AuthButtonsTextStyle"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
