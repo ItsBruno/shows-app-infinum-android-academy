@@ -52,4 +52,8 @@
     <string name="shows_fetch_fail">Failed to get shows</string>
     <string name="review_add_fail">Failed to add a review</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="get_shows_failed">Failed to get shows</string>
+    <string name="get_top_shows_failed">Failed to get top rated shows</string>
+    <string name="get_profile_failed">Failed to get profile information</string>
+    <string name="upload_picture_failed">Failed to upload profile picture</string>
 </resources>
