@@ -20,9 +20,8 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-const val PAGE = "page"
-const val ITEMS = "items"
-const val ID = "id"
+const val PAGES = 1
+const val ITEMS = 20
 interface ShowsApiService {
 
     @POST("/users")
@@ -33,26 +32,26 @@ interface ShowsApiService {
 
     @GET("/shows")
     suspend fun getShows(
-        @Query(PAGE) page: Int = 1,
-        @Query(ITEMS) items: Int = 20
+        @Query("page") page: Int = PAGES,
+        @Query("items") items: Int = ITEMS
     ): Response<ListShowsResponse>
 
     @GET("/shows/{id}")
     suspend fun getShowInfo(
-        @Path(ID) showId: String,
+        @Path("id") showId: String,
     ): ShowInfoResponse
 
     @GET("/shows/top_rated")
     suspend fun getTopRatedShows(
-        @Query(PAGE) page: Int = 1,
-        @Query(ITEMS) items: Int = 20
+        @Query("page") page: Int = PAGES,
+        @Query("items") items: Int = ITEMS
     ): Response<ListShowsResponse>
 
     @GET("/shows/{id}/reviews")
     suspend fun getReviews(
-        @Path(ID) showId: String,
-        @Query(PAGE) page: Int = 1,
-        @Query(ITEMS) items: Int = 20
+        @Path("id") showId: String,
+        @Query("page") page: Int = PAGES,
+        @Query("items") items: Int = ITEMS
     ): Response<ListReviewsResponse>
 
     @POST("/reviews")

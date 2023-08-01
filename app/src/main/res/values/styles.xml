@@ -35,5 +35,4 @@
         <item name="chipStrokeColor">@color/purple_color</item>
         <item name="chipStrokeWidth">2dp</item>
     </style>
-
 </resources>

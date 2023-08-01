@@ -55,10 +55,7 @@ class ShowDetailsViewModel(
         }
     }
 
-    private suspend fun fetchShowInfo(showId: String): Show {
-        val response = ApiModule.retrofit.getShowInfo(showId = showId)
-        return response.show
-    }
+    private suspend fun fetchShowInfo(showId: String): Show = ApiModule.retrofit.getShowInfo(showId = showId).show
 
     fun getReviews(showId: String, networkAvailable: Boolean) {
         if(networkAvailable) {

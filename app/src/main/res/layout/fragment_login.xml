@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/infinum_purple"
@@ -47,6 +46,7 @@
             />
 
         <TextView
+            android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="92dp"
@@ -145,20 +145,21 @@
 
         <CheckBox
             android:id="@+id/remember_me_checkbox"
+            style="@style/Widget.App.CheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginHorizontal="@dimen/margin_24dp"
             android:layout_marginTop="@dimen/margin_8"
             android:text="@string/remember_me"
             android:textColor="@color/white"
             android:textSize="@dimen/text16sp"
-            style="@style/Widget.App.CheckBox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/passwordFieldLayout"
             />
 
         <Button
             android:id="@+id/loginButton"
+            style="@style/AuthButtonsTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="22dp"
@@ -171,7 +172,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox"
-            style="@style/AuthButtonsTextStyle"
             />
 
         <Button
@@ -191,6 +191,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/loginButton"
             />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

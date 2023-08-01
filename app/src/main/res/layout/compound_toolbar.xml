@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolAppBar"
+    style="@style/Widget.MaterialComponents.Toolbar.Primary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    tools:parentTag="com.google.android.material.appbar.MaterialToolbar">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/size40dp"
+        android:layout_height="@dimen/size40dp"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_gravity="end"
+        app:cardCornerRadius="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_profile_placeholder"
+            android:scaleType="centerCrop"/>
+
+    </androidx.cardview.widget.CardView>
+</merge>

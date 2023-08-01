@@ -1,13 +1,18 @@
 package infinuma.android.shows.ui.authentication
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.edit
 import androidx.core.view.isVisible
@@ -60,6 +65,7 @@ class LoginFragment : Fragment() {
         toggleRegisteredDisplay()
         setLoginResultAction()
         initListeners()
+        animateIconAndTitle()
     }
 
     private fun setLoginResultAction() {
@@ -203,5 +209,32 @@ class LoginFragment : Fragment() {
         } else {
             binding.emailFieldLayout.error = null
         }
+    }
+
+
+
+    private fun animateIconAndTitle() {
+        binding.appName.scaleX = 0f
+        binding.appName.scaleY = 0f
+
+        val iconAnimation = ObjectAnimator.ofFloat(binding.triangleIllustration, "translationY", -500f, 0f)
+        iconAnimation.duration = 1000
+        iconAnimation.interpolator = BounceInterpolator()
+
+        val titleAnimationX = ObjectAnimator.ofFloat(binding.appName, "scaleX", 1f)
+        titleAnimationX.duration = 1000
+        titleAnimationX.interpolator = OvershootInterpolator()
+
+        val titleAnimationY = ObjectAnimator.ofFloat(binding.appName, "scaleY", 1f)
+        titleAnimationY.duration = 1000
+        titleAnimationY.interpolator = OvershootInterpolator()
+
+
+        AnimatorSet().apply{
+            play(iconAnimation)
+            play(titleAnimationX).with(titleAnimationY)
+            play(titleAnimationX).after(iconAnimation)
+        }.start()
+
     }
 }

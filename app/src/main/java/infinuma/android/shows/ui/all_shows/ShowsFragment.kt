@@ -108,7 +108,12 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setProfilePicture(binding.profile)
+        viewModel.pfpUrlLiveData.observe(viewLifecycleOwner) { pictureUrl ->
+            if (pictureUrl != null) {
+                binding.toolAppBar.setProfileIconUri(pictureUrl)
+            }
+        }
+
         viewModel.getMyProfile()
 
         initListeners()
@@ -201,7 +206,7 @@ class ShowsFragment : Fragment() {
 
     private fun initListeners() {
         with(binding) {
-            profile.setOnClickListener {
+            toolAppBar.setOnProfilePictureClickListener {
                 if (profileDialogClosed) {
                     profileDialogClosed = false
                     buildProfileBottomSheetDialog()
@@ -338,14 +343,13 @@ class ShowsFragment : Fragment() {
 
     private fun displayShows() {
         viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
-            if (shows != null) {
+            containsShows = if (shows != null) {
                 adapter.updateData(shows)
-                containsShows = true
-                toggleRecyclerView()
+                true
             } else {
-                containsShows = false
-                toggleRecyclerView()
+                false
             }
+            toggleRecyclerView()
         }
     }
 
