@@ -9,7 +9,7 @@
     android:padding="8dp"
     android:clipToPadding="false">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profilePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,8 @@
         android:src="@drawable/ic_profile_placeholder"
         android:contentDescription="@string/profile_picture"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"/>
 
     <TextView
         android:id="@+id/profileName"

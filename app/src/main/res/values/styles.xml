@@ -35,4 +35,7 @@
         <item name="chipStrokeColor">@color/purple_color</item>
         <item name="chipStrokeWidth">2dp</item>
     </style>
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
