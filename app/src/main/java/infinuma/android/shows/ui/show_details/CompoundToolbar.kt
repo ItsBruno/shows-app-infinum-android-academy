@@ -16,7 +16,7 @@ class CompoundToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttrs: Int = 0
-): MaterialToolbar(context, attrs, defStyleAttrs) {
+) : MaterialToolbar(context, attrs, defStyleAttrs) {
     private var binding: CompoundToolbarBinding
 
     init {

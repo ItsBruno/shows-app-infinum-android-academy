@@ -7,4 +7,4 @@ data class AddReviewRequest(
     @SerialName("rating") val rating: Int,
     @SerialName("comment") val comment: String,
     @SerialName("show_id") val showId: String
-    )
+)

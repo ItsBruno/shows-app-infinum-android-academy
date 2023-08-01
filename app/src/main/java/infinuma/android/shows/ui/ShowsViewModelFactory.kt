@@ -14,8 +14,7 @@ class ShowsViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShowsViewModel::class.java)) {
             return ShowsViewModel(database = database) as T
-        }
-        else if (modelClass.isAssignableFrom(ShowDetailsViewModel::class.java)) {
+        } else if (modelClass.isAssignableFrom(ShowDetailsViewModel::class.java)) {
             return ShowDetailsViewModel(database = database) as T
         }
         throw IllegalArgumentException("Sorry, can't work with this")

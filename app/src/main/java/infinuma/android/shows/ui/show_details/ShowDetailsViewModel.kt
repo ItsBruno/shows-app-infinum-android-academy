@@ -39,7 +39,7 @@ class ShowDetailsViewModel(
 
     private var imageDir: File? = null
     fun getShowInfo(showId: String, networkAvailable: Boolean) {
-        if(networkAvailable) {
+        if (networkAvailable) {
             viewModelScope.launch {
                 try {
                     _showLiveData.value = fetchShowInfo(showId)
@@ -49,8 +49,7 @@ class ShowDetailsViewModel(
                     _showFetchSuccessLiveData.value = false
                 }
             }
-        }
-        else {
+        } else {
             getShowInfoFromDatabase(showId)
         }
     }
@@ -58,7 +57,7 @@ class ShowDetailsViewModel(
     private suspend fun fetchShowInfo(showId: String): Show = ApiModule.retrofit.getShowInfo(showId = showId).show
 
     fun getReviews(showId: String, networkAvailable: Boolean) {
-        if(networkAvailable) {
+        if (networkAvailable) {
             viewModelScope.launch {
                 try {
                     val reviews = fetchReviews(showId)
@@ -68,8 +67,7 @@ class ShowDetailsViewModel(
                     Log.e("EXCEPTION", err.toString())
                 }
             }
-        }
-        else{
+        } else {
             getReviewsFromDatabase(showId)
         }
     }
@@ -98,9 +96,9 @@ class ShowDetailsViewModel(
         rating: Int, comment: String, showId: String
     ): Boolean {
         val response = ApiModule.retrofit.addReview(
-           request = AddReviewRequest(rating = rating, comment = comment, showId = showId)
+            request = AddReviewRequest(rating = rating, comment = comment, showId = showId)
         )
-        if(!response.isSuccessful) {
+        if (!response.isSuccessful) {
             throw IOException("Cannot add review")
         }
         //since the response was successful the network must be available
@@ -118,24 +116,40 @@ class ShowDetailsViewModel(
 
     private fun getReviewsFromDatabase(showId: String) {
         viewModelScope.launch {
-            val reviews = database.reviewDao().getAllReviewsForShow(showId).map {review->
-                Review(review.id, review.comment,review.rating, review.showId, User(review.userId, review.email, review.imageUrl))
+            val reviews = database.reviewDao().getAllReviewsForShow(showId).map { review ->
+                Review(review.id, review.comment, review.rating, review.showId, User(review.userId, review.email, review.imageUrl))
             }
-            if(reviews.isNotEmpty()) _reviewsLiveData.value = reviews
+            if (reviews.isNotEmpty()) _reviewsLiveData.value = reviews
         }
     }
 
     private fun saveReviewsToDatabase(showId: String, reviews: List<Review>) {
         viewModelScope.launch {
-            val deferredReviews = reviews.map {review ->
+            val deferredReviews = reviews.map { review ->
                 async {
-                    if(review.user.imageUrl != null){
+                    if (review.user.imageUrl != null) {
                         val localUri = saveImage(review.user.imageUrl, imageDir!!, review.id)
                         localUri?.let {
-                            ReviewEntity(review.id, review.comment, review.rating, review.showId, review.user.id, review.user.email, localUri.toString())
+                            ReviewEntity(
+                                review.id,
+                                review.comment,
+                                review.rating,
+                                review.showId,
+                                review.user.id,
+                                review.user.email,
+                                localUri.toString()
+                            )
                         }
                     } else {
-                        ReviewEntity(review.id, review.comment, review.rating, review.showId, review.user.id, review.user.email, Uri.parse(R.drawable.ic_profile_placeholder.toString()).toString())
+                        ReviewEntity(
+                            review.id,
+                            review.comment,
+                            review.rating,
+                            review.showId,
+                            review.user.id,
+                            review.user.email,
+                            Uri.parse(R.drawable.ic_profile_placeholder.toString()).toString()
+                        )
                     }
                 }
             }

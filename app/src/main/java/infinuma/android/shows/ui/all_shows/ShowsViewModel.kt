@@ -63,7 +63,7 @@ class ShowsViewModel(
               current state of the live data new shows would be fetched and since the top rated shows were saved in the live data
               the top rated shows would be displayed twice
             */
-            if(lastShowChangeFromDatabase) {
+            if (lastShowChangeFromDatabase) {
                 page = 0
                 _showsLiveData.value = listOf<Show>()
                 lastShowChangeFromDatabase = false
@@ -179,7 +179,15 @@ class ShowsViewModel(
                 async {
                     val localUri = saveImage(show.imageUrl, imageDir!!, show.id)
                     localUri?.let {
-                        ShowEntity(show.id, show.averageRating, show.description, localUri.toString(), show.noOfReviews, show.title, topRated)
+                        ShowEntity(
+                            show.id,
+                            show.averageRating,
+                            show.description,
+                            localUri.toString(),
+                            show.noOfReviews,
+                            show.title,
+                            topRated
+                        )
                     }
                 }
             }
@@ -210,6 +218,7 @@ class ShowsViewModel(
             showEntity.id, showEntity.averageRating, showEntity.description, showEntity.imageUrl, showEntity.noOfReviews, showEntity.title
         )
     }
+
     fun setImageDir(imageDir: File?) {
         this.imageDir = imageDir
     }

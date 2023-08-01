@@ -22,6 +22,7 @@ import retrofit2.http.Query
 
 const val PAGES = 1
 const val ITEMS = 20
+
 interface ShowsApiService {
 
     @POST("/users")
@@ -57,7 +58,7 @@ interface ShowsApiService {
     @POST("/reviews")
     suspend fun addReview(
         @Body request: AddReviewRequest
-    ) : Response<AddReviewResponse>
+    ): Response<AddReviewResponse>
 
     @Multipart
     @PUT("/users")

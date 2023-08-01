@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -97,8 +96,8 @@ class LoginFragment : Fragment() {
         val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
         if (userRemembered) {
             navigateToShows(
-                    sharedPreferences.getString(USER_EMAIL, "Unknown")!!
-                )
+                sharedPreferences.getString(USER_EMAIL, "Unknown")!!
+            )
         }
 
     }
@@ -161,15 +160,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleUserLoginMemorization(accessToken: String, client: String, uid: String) {
-            sharedPreferences.edit {
-                if (binding.rememberMeCheckbox.isChecked) {
-                    putBoolean(REMEMBER_USER, true)
-                    putString(USER_EMAIL, binding.emailField.text.toString())
-                }
-                putString(ACCESS_TOKEN, accessToken)
-                putString(CLIENT, client)
-                putString(UID, uid)
+        sharedPreferences.edit {
+            if (binding.rememberMeCheckbox.isChecked) {
+                putBoolean(REMEMBER_USER, true)
+                putString(USER_EMAIL, binding.emailField.text.toString())
             }
+            putString(ACCESS_TOKEN, accessToken)
+            putString(CLIENT, client)
+            putString(UID, uid)
+        }
     }
 
     private fun validateEmail(email: String): Boolean {
@@ -211,8 +210,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-
-
     private fun animateIconAndTitle() {
         binding.appName.scaleX = 0f
         binding.appName.scaleY = 0f
@@ -230,7 +227,7 @@ class LoginFragment : Fragment() {
         titleAnimationY.interpolator = OvershootInterpolator()
 
 
-        AnimatorSet().apply{
+        AnimatorSet().apply {
             play(iconAnimation)
             play(titleAnimationX).with(titleAnimationY)
             play(titleAnimationX).after(iconAnimation)

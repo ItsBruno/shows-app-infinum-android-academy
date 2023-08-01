@@ -161,6 +161,7 @@
 
         <Button
             android:id="@+id/registerButton"
+            style="@style/AuthButtonsTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24dp"
@@ -174,7 +175,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/repeatPasswordFieldLayout"
-            style="@style/AuthButtonsTextStyle"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

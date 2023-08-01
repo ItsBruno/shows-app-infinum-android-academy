@@ -72,7 +72,7 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var topRatedShowsAdapter: ShowsAdapter
 
-    private val viewModel: ShowsViewModel by viewModels{
+    private val viewModel: ShowsViewModel by viewModels {
         ShowsViewModelFactory((requireContext().applicationContext as ShowsApplication).database)
     }
     private val args by navArgs<ShowsFragmentArgs>()
@@ -226,7 +226,7 @@ class ShowsFragment : Fragment() {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0
                     ) {
-                        if(isInternetAvailable(requireContext())) {
+                        if (isInternetAvailable(requireContext())) {
                             viewModel.getShows(isInternetAvailable(requireContext()))
                         }
                     }
@@ -367,26 +367,27 @@ class ShowsFragment : Fragment() {
     }
 
     private fun setApiResultsObservers() {
-        viewModel.getShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getShowsSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_shows_failed)
             }
         }
-        viewModel.getTopShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getTopShowsSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_top_shows_failed)
             }
         }
-        viewModel.getMyProfileSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getMyProfileSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_profile_failed)
             }
         }
-        viewModel.profilePictureUploadSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.profilePictureUploadSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.upload_picture_failed)
             }
         }
     }
+
     private fun makeSnackbar(message: Int) = Snackbar.make(binding.root, getString(message), Snackbar.LENGTH_SHORT).show()
 }
