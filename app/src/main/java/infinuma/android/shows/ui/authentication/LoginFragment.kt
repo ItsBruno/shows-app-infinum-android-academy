@@ -150,6 +150,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToShows(email: String) {
+        ApiModule.setSessionInfo(
+            sharedPreferences.getString(ACCESS_TOKEN, "")!!,
+            sharedPreferences.getString(CLIENT, "")!!,
+            sharedPreferences.getString(UID, "")!!
+        )
         val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email)
         findNavController().navigate(direction)
     }

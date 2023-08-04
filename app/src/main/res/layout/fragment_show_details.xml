@@ -164,16 +164,12 @@
 
     <Button
         android:id="@+id/reviewButton"
-        style="@style/ReviewButton"
+        style="@style/ButtonsStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
         android:layout_marginBottom="@dimen/margin_24dp"
         android:text="@string/write_a_review"
-        android:textStyle="bold"
-        android:textAllCaps="false"
         android:textColor="@color/white"
-        android:backgroundTint="@color/purple_color"
+        android:layout_marginHorizontal="@dimen/margin_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

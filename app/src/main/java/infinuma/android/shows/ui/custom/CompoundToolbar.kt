@@ -1,4 +1,4 @@
-package infinuma.android.shows.ui.show_details
+package infinuma.android.shows.ui.custom
 
 import android.content.Context
 import android.net.Uri

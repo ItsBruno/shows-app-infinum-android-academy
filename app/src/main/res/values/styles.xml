@@ -17,24 +17,26 @@
         <item name="colorControlActivated">@color/purple_color</item>
     </style>
 
-    <style name="ReviewButton">
-        <item name="cornerRadius">32dp</item>
-        <item name="android:backgroundTint">@color/review_button_color</item>
-    </style>
     <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="buttonTint">@color/button_tint</item>
     </style>
-    <style name="AuthButtonsTextStyle">
+
+    <style name="ButtonsStyle">
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/auth_buttons_text_color</item>
         <item name="android:textSize">@dimen/text16sp</item>
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/button_selector</item>
     </style>
+
     <style name="chipStyle">
         <item name="chipBackgroundColor">@color/chip_background</item>
         <item name="chipStrokeColor">@color/purple_color</item>
         <item name="chipStrokeWidth">2dp</item>
     </style>
+
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>

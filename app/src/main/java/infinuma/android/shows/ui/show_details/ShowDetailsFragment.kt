@@ -62,7 +62,6 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun handleApiRequests() {
-        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
         showDetailsViewModel.getShowInfo(args.showId, isInternetAvailable(requireContext()))
         showDetailsViewModel.getReviews(args.showId, isInternetAvailable(requireContext()))
     }

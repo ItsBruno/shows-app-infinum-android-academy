@@ -63,7 +63,7 @@
             android:id="@+id/loginText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="@dimen/size96dp"
             android:layout_marginStart="@dimen/margin_24dp"
             android:text="@string/login_activity_name"
             android:textColor="@color/white"
@@ -129,7 +129,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailFieldLayout"
-
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -159,16 +158,12 @@
 
         <Button
             android:id="@+id/loginButton"
-            style="@style/AuthButtonsTextStyle"
+            style="@style/ButtonsStyle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="22dp"
             android:layout_marginBottom="32dp"
-            android:layout_marginTop="155dp"
+            android:layout_marginTop="@dimen/size88dp"
             android:text="@string/login"
-            android:background="@drawable/rounded_button"
             android:enabled="false"
-            app:backgroundTint="@color/button_selector"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/remember_me_checkbox"
@@ -176,16 +171,14 @@
 
         <Button
             android:id="@+id/registerButton"
+            style="@style/ButtonsStyle"
+            android:textColor="@color/white"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="22dp"
             android:layout_marginBottom="32dp"
             android:layout_marginTop="@dimen/margin_24dp"
             android:text="@string/register"
-            android:textAllCaps="false"
+            android:layout_marginHorizontal="@dimen/margin_24dp"
             android:background="@drawable/register_button_in_login"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

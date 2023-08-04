@@ -92,7 +92,6 @@ class ShowsFragment : Fragment() {
     }
 
     private fun handeApiCalls() {
-        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
         val internetAvailable = isInternetAvailable(requireContext())
         Log.i("NETWORK", "Internet available: $internetAvailable")
         viewModel.getShows(internetAvailable)
@@ -109,7 +108,7 @@ class ShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.pfpUrlLiveData.observe(viewLifecycleOwner) { pictureUrl ->
-            if (pictureUrl != null) {
+            pictureUrl?.let{
                 binding.toolAppBar.setProfileIconUri(pictureUrl)
             }
         }

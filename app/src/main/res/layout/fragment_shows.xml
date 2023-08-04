@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <infinuma.android.shows.ui.show_details.CompoundToolbar
+        <infinuma.android.shows.ui.custom.CompoundToolbar
             android:id="@+id/toolAppBar"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
