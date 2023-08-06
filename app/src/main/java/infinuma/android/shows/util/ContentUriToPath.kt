@@ -10,7 +10,7 @@ import java.io.InputStream
 
 fun getRealPathFromURI(uri: Uri, context: Context): String? {
     val returnCursor = context.contentResolver.query(uri, null, null, null, null)
-    val nameIndex =  returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+    val nameIndex = returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
     val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
     returnCursor.moveToFirst()
     val name = returnCursor.getString(nameIndex)

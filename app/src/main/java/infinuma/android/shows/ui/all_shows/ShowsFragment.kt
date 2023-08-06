@@ -72,7 +72,7 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var topRatedShowsAdapter: ShowsAdapter
 
-    private val viewModel: ShowsViewModel by viewModels{
+    private val viewModel: ShowsViewModel by viewModels {
         ShowsViewModelFactory((requireContext().applicationContext as ShowsApplication).database)
     }
     private val args by navArgs<ShowsFragmentArgs>()
@@ -92,7 +92,6 @@ class ShowsFragment : Fragment() {
     }
 
     private fun handeApiCalls() {
-        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
         val internetAvailable = isInternetAvailable(requireContext())
         Log.i("NETWORK", "Internet available: $internetAvailable")
         viewModel.getShows(internetAvailable)
@@ -108,7 +107,12 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setProfilePicture(binding.profile)
+        viewModel.pfpUrlLiveData.observe(viewLifecycleOwner) { pictureUrl ->
+            pictureUrl?.let{
+                binding.toolAppBar.setProfileIconUri(pictureUrl)
+            }
+        }
+
         viewModel.getMyProfile()
 
         initListeners()
@@ -201,7 +205,7 @@ class ShowsFragment : Fragment() {
 
     private fun initListeners() {
         with(binding) {
-            profile.setOnClickListener {
+            toolAppBar.setOnProfilePictureClickListener {
                 if (profileDialogClosed) {
                     profileDialogClosed = false
                     buildProfileBottomSheetDialog()
@@ -221,7 +225,7 @@ class ShowsFragment : Fragment() {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0
                     ) {
-                        if(isInternetAvailable(requireContext())) {
+                        if (isInternetAvailable(requireContext())) {
                             viewModel.getShows(isInternetAvailable(requireContext()))
                         }
                     }
@@ -338,14 +342,13 @@ class ShowsFragment : Fragment() {
 
     private fun displayShows() {
         viewModel.showsLiveData.observe(viewLifecycleOwner) { shows ->
-            if (shows != null) {
+            containsShows = if (shows != null) {
                 adapter.updateData(shows)
-                containsShows = true
-                toggleRecyclerView()
+                true
             } else {
-                containsShows = false
-                toggleRecyclerView()
+                false
             }
+            toggleRecyclerView()
         }
     }
 
@@ -363,26 +366,27 @@ class ShowsFragment : Fragment() {
     }
 
     private fun setApiResultsObservers() {
-        viewModel.getShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getShowsSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_shows_failed)
             }
         }
-        viewModel.getTopShowsSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getTopShowsSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_top_shows_failed)
             }
         }
-        viewModel.getMyProfileSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.getMyProfileSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.get_profile_failed)
             }
         }
-        viewModel.profilePictureUploadSuccessLiveData.observe(viewLifecycleOwner) {success ->
-            if(!success) {
+        viewModel.profilePictureUploadSuccessLiveData.observe(viewLifecycleOwner) { success ->
+            if (!success) {
                 makeSnackbar(R.string.upload_picture_failed)
             }
         }
     }
+
     private fun makeSnackbar(message: Int) = Snackbar.make(binding.root, getString(message), Snackbar.LENGTH_SHORT).show()
 }

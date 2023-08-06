@@ -1,5 +1,7 @@
 package infinuma.android.shows.ui.authentication
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.edit
 import androidx.core.view.isVisible
@@ -60,6 +64,7 @@ class LoginFragment : Fragment() {
         toggleRegisteredDisplay()
         setLoginResultAction()
         initListeners()
+        animateIconAndTitle()
     }
 
     private fun setLoginResultAction() {
@@ -91,8 +96,8 @@ class LoginFragment : Fragment() {
         val userRemembered = sharedPreferences.getBoolean(REMEMBER_USER, false)
         if (userRemembered) {
             navigateToShows(
-                    sharedPreferences.getString(USER_EMAIL, "Unknown")!!
-                )
+                sharedPreferences.getString(USER_EMAIL, "Unknown")!!
+            )
         }
 
     }
@@ -145,6 +150,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToShows(email: String) {
+        ApiModule.setSessionInfo(
+            sharedPreferences.getString(ACCESS_TOKEN, "")!!,
+            sharedPreferences.getString(CLIENT, "")!!,
+            sharedPreferences.getString(UID, "")!!
+        )
         val direction = LoginFragmentDirections.actionLoginFragmentToShowsFragment(email)
         findNavController().navigate(direction)
     }
@@ -155,15 +165,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleUserLoginMemorization(accessToken: String, client: String, uid: String) {
-            sharedPreferences.edit {
-                if (binding.rememberMeCheckbox.isChecked) {
-                    putBoolean(REMEMBER_USER, true)
-                    putString(USER_EMAIL, binding.emailField.text.toString())
-                }
-                putString(ACCESS_TOKEN, accessToken)
-                putString(CLIENT, client)
-                putString(UID, uid)
+        sharedPreferences.edit {
+            if (binding.rememberMeCheckbox.isChecked) {
+                putBoolean(REMEMBER_USER, true)
+                putString(USER_EMAIL, binding.emailField.text.toString())
             }
+            putString(ACCESS_TOKEN, accessToken)
+            putString(CLIENT, client)
+            putString(UID, uid)
+        }
     }
 
     private fun validateEmail(email: String): Boolean {
@@ -203,5 +213,30 @@ class LoginFragment : Fragment() {
         } else {
             binding.emailFieldLayout.error = null
         }
+    }
+
+    private fun animateIconAndTitle() {
+        binding.appName.scaleX = 0f
+        binding.appName.scaleY = 0f
+
+        val iconAnimation = ObjectAnimator.ofFloat(binding.triangleIllustration, "translationY", -500f, 0f)
+        iconAnimation.duration = 1000
+        iconAnimation.interpolator = BounceInterpolator()
+
+        val titleAnimationX = ObjectAnimator.ofFloat(binding.appName, "scaleX", 1f)
+        titleAnimationX.duration = 1000
+        titleAnimationX.interpolator = OvershootInterpolator()
+
+        val titleAnimationY = ObjectAnimator.ofFloat(binding.appName, "scaleY", 1f)
+        titleAnimationY.duration = 1000
+        titleAnimationY.interpolator = OvershootInterpolator()
+
+
+        AnimatorSet().apply {
+            play(iconAnimation)
+            play(titleAnimationX).with(titleAnimationY)
+            play(titleAnimationX).after(iconAnimation)
+        }.start()
+
     }
 }

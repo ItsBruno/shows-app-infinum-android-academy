@@ -18,12 +18,13 @@
         app:strokeColor="@color/purple_color"
         app:strokeWidth="2dp"
         >
+
         <ImageView
             android:id="@+id/profilePicture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_profile_placeholder"
             android:layout_gravity="center"
+            android:src="@drawable/ic_profile_placeholder"
             android:scaleType="centerCrop"
             />
 
@@ -62,8 +63,8 @@
         android:textAllCaps="false"
         android:backgroundTint="@color/purple_color"
         android:textSize="@dimen/text16sp"
-        app:cornerRadius="@dimen/size40dp"
         android:textColor="@color/white"
+        app:cornerRadius="@dimen/size40dp"
         />
 
 </LinearLayout>

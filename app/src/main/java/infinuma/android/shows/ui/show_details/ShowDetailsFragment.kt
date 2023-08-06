@@ -37,7 +37,7 @@ class ShowDetailsFragment : Fragment() {
 
     private val args by navArgs<ShowDetailsFragmentArgs>()
 
-    private val showDetailsViewModel: ShowDetailsViewModel by viewModels{
+    private val showDetailsViewModel: ShowDetailsViewModel by viewModels {
         ShowsViewModelFactory((requireContext().applicationContext as ShowsApplication).database)
     }
 
@@ -62,7 +62,6 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun handleApiRequests() {
-        ApiModule.initRetrofit(requireContext(), accessToken, client, uid)
         showDetailsViewModel.getShowInfo(args.showId, isInternetAvailable(requireContext()))
         showDetailsViewModel.getReviews(args.showId, isInternetAvailable(requireContext()))
     }
@@ -114,8 +113,8 @@ class ShowDetailsFragment : Fragment() {
                 setShowDisplayValues(show)
             }
         }
-        showDetailsViewModel.showFetchSuccessLiveData.observe(viewLifecycleOwner) {fetchSuccess ->
-            if(!fetchSuccess) {
+        showDetailsViewModel.showFetchSuccessLiveData.observe(viewLifecycleOwner) { fetchSuccess ->
+            if (!fetchSuccess) {
                 Snackbar.make(binding.root, R.string.shows_fetch_fail, Snackbar.LENGTH_SHORT).show()
             }
         }
@@ -125,8 +124,8 @@ class ShowDetailsFragment : Fragment() {
         with(binding) {
             description.text = show.description
             showTitle.text = show.title
-            ratingBar.rating = show.averageRating?: 0f
-            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating?: 0f)
+            ratingBar.rating = show.averageRating ?: 0f
+            reviewStats.text = getString(R.string.d_reviews_f_average, show.noOfReviews, show.averageRating ?: 0f)
             Glide
                 .with(requireContext())
                 .load(show.imageUrl)
@@ -141,9 +140,9 @@ class ShowDetailsFragment : Fragment() {
             adapter = ShowDetailsAdapter(emptyList())
             reviewRecyclerView.adapter = adapter
             showDetailsViewModel.reviewsLiveData.observe(viewLifecycleOwner) { reviews ->
-                if(!reviews.isNullOrEmpty()) {
+                if (!reviews.isNullOrEmpty()) {
                     adapter.updateData(reviews)
-                    if(noReviewsMessage.isVisible) {
+                    if (noReviewsMessage.isVisible) {
                         reviewsPresentDisplay.isVisible = true
                         noReviewsMessage.isVisible = false
                     }
@@ -152,8 +151,8 @@ class ShowDetailsFragment : Fragment() {
                     noReviewsMessage.isVisible = true
                 }
             }
-            showDetailsViewModel.reviewAddedLiveData.observe(viewLifecycleOwner) {reviewAdded ->
-                if(!reviewAdded) {
+            showDetailsViewModel.reviewAddedLiveData.observe(viewLifecycleOwner) { reviewAdded ->
+                if (!reviewAdded) {
                     Snackbar.make(binding.root, R.string.review_add_fail, Snackbar.LENGTH_SHORT).show()
                 }
             }

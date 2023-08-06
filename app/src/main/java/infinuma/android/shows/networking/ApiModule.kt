@@ -15,7 +15,16 @@ object ApiModule {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun initRetrofit(context: Context, accessToken: String  = "", client: String = "", uid: String = "") {
+    private  var accessToken: String = ""
+    private  var client: String = ""
+    private  var uid: String = ""
+
+    fun setSessionInfo (accessToken: String, client: String, uid: String){
+        this.accessToken = accessToken
+        this.client = client
+        this.uid = uid
+    }
+    fun initRetrofit(context: Context) {
         val okhttp = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val originalRequest = chain.request()

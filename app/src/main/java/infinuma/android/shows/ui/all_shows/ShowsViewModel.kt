@@ -2,7 +2,6 @@ package infinuma.android.shows.ui.all_shows
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,19 +11,15 @@ import infinuma.android.shows.db.ShowsDatabase
 import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.model.networking.response.Show
 import infinuma.android.shows.model.networking.response.User
-import infinuma.android.shows.networking.PAGE
 import infinuma.android.shows.util.saveImage
 import java.io.File
 import java.io.IOException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okio.Path
 
 const val PAGE_SIZE = 20
 
@@ -68,7 +63,7 @@ class ShowsViewModel(
               current state of the live data new shows would be fetched and since the top rated shows were saved in the live data
               the top rated shows would be displayed twice
             */
-            if(lastShowChangeFromDatabase) {
+            if (lastShowChangeFromDatabase) {
                 page = 0
                 _showsLiveData.value = listOf<Show>()
                 lastShowChangeFromDatabase = false
@@ -176,11 +171,7 @@ class ShowsViewModel(
         }
     }
 
-    private suspend fun sendMyInfoGetRequest(): User? {
-        val response = ApiModule.retrofit.getMe()
-
-        return response.user
-    }
+    private suspend fun sendMyInfoGetRequest(): User = ApiModule.retrofit.getMe().user
 
     private fun saveToDatabase(shows: List<Show>, topRated: Boolean) {
         viewModelScope.launch {
@@ -188,7 +179,15 @@ class ShowsViewModel(
                 async {
                     val localUri = saveImage(show.imageUrl, imageDir!!, show.id)
                     localUri?.let {
-                        ShowEntity(show.id, show.averageRating, show.description, localUri.toString(), show.noOfReviews, show.title, topRated)
+                        ShowEntity(
+                            show.id,
+                            show.averageRating,
+                            show.description,
+                            localUri.toString(),
+                            show.noOfReviews,
+                            show.title,
+                            topRated
+                        )
                     }
                 }
             }
@@ -219,6 +218,7 @@ class ShowsViewModel(
             showEntity.id, showEntity.averageRating, showEntity.description, showEntity.imageUrl, showEntity.noOfReviews, showEntity.title
         )
     }
+
     fun setImageDir(imageDir: File?) {
         this.imageDir = imageDir
     }

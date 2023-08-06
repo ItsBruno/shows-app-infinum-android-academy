@@ -14,7 +14,7 @@ suspend fun saveImage(url: String, imageDir: File, id: String): Uri? {
             val imageFile = File(imageDir, "showImage${id}.jpg")
             val localUri = imageFile.toUri()
 
-            if(!imageFile.exists()) {
+            if (!imageFile.exists()) {
                 val inputStream = URL(url).openStream()
                 val outputStream = FileOutputStream(File(localUri.path ?: ""))
                 inputStream.copyTo(outputStream)

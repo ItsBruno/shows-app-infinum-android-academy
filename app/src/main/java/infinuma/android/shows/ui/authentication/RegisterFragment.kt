@@ -10,7 +10,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import infinuma.android.shows.networking.ApiModule
 import infinuma.android.shows.R
 import infinuma.android.shows.databinding.FragmentRegisterBinding
 
@@ -23,7 +22,6 @@ class RegisterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ApiModule.initRetrofit(requireContext())
     }
 
     override fun onCreateView(
@@ -41,12 +39,11 @@ class RegisterFragment : Fragment() {
     }
 
     private fun setOnRegistrationResultAction() {
-        viewModel.registrationResultLiveData.observe(viewLifecycleOwner) {isRegistrationSuccessful ->
-            if(isRegistrationSuccessful) {
+        viewModel.registrationResultLiveData.observe(viewLifecycleOwner) { isRegistrationSuccessful ->
+            if (isRegistrationSuccessful) {
                 val direction = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(direction)
-            }
-            else {
+            } else {
                 Snackbar.make(binding.root, R.string.registration_unsuccessful, Snackbar.LENGTH_SHORT).show()
             }
         }
@@ -86,7 +83,7 @@ class RegisterFragment : Fragment() {
             }
 
             repeatPasswordField.setOnFocusChangeListener { _, hasFocus ->
-                if(!hasFocus) {
+                if (!hasFocus) {
                     updatePasswordsFields()
                 }
             }
@@ -131,7 +128,8 @@ class RegisterFragment : Fragment() {
 
     private fun validateCredentials(): Boolean {
         return validateEmail(binding.emailField.text.toString().trim()) && validatePassword(
-            binding.passwordField.text.toString().trim()) && checkPasswordsMatch()
+            binding.passwordField.text.toString().trim()
+        ) && checkPasswordsMatch()
     }
 
     private fun updateEmailField() {
@@ -167,8 +165,7 @@ class RegisterFragment : Fragment() {
                 repeatPasswordFieldLayout.setErrorTextAppearance(R.style.ErrorTextAppearance)
                 passwordField.setText("")
                 repeatPasswordField.setText("")
-            }
-            else {
+            } else {
                 repeatPasswordFieldLayout.error = null
             }
         }

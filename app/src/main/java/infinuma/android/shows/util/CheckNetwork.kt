@@ -11,6 +11,7 @@ fun isInternetAvailable(context: Context): Boolean {
     val network = connectivityManager.activeNetwork ?: return false
 
     val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
-    return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        ?: false
+    return (networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        ?: false) and (networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false)
+
 }

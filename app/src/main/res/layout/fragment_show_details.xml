@@ -72,8 +72,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/show_image"
-                    tools:src="@drawable/ic_office"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/ic_office"/>
+
                 <ProgressBar
                     android:id="@+id/loadingSpinner"
                     style="?android:attr/progressBarStyleLarge"
@@ -122,6 +123,7 @@
                     android:textColor="@color/black"
                     tools:text="@string/d_reviews_f_average"
                     />
+
                 <RatingBar
                     android:id="@+id/ratingBar"
                     style="@style/CustomRatingBarStyle"
@@ -143,6 +145,7 @@
                     tools:listitem="@layout/review_card"
                     />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/noReviewsMessage"
                 android:layout_width="match_parent"
@@ -161,16 +164,11 @@
 
     <Button
         android:id="@+id/reviewButton"
-        style="@style/ReviewButton"
+        style="@style/MiscButtonsStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/horizontal_marign_show_details"
         android:layout_marginBottom="@dimen/margin_24dp"
         android:text="@string/write_a_review"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple_color"
+        android:layout_marginHorizontal="@dimen/margin_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

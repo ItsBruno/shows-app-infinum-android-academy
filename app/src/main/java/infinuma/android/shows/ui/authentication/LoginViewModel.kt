@@ -15,13 +15,14 @@ import retrofit2.Response
 const val ACCESS_HEADER = "access-token"
 const val CLIENT_HEADER = "client"
 const val UID_HEADER = "uid"
-class LoginViewModel: ViewModel() {
+
+class LoginViewModel : ViewModel() {
 
     data class sessionData(
         val accessToken: String,
         val client: String,
         val uid: String
-        )
+    )
 
     private val _loginSuccessfulLiveData = MutableLiveData<Boolean>()
     val loginSuccessfulLiveData: LiveData<Boolean> = _loginSuccessfulLiveData
@@ -29,16 +30,15 @@ class LoginViewModel: ViewModel() {
     private val _sessionLiveData = MutableLiveData<sessionData>()
     val sessionLiveData: LiveData<sessionData> = _sessionLiveData
 
-
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             try {
                 val response = postLoginRequest(email, password)
                 _loginSuccessfulLiveData.value = true
                 _sessionLiveData.value = sessionData(
-                    accessToken = response.headers()[ACCESS_HEADER]?: "",
-                    client = response.headers()[CLIENT_HEADER]?: "",
-                    uid = response.headers()[UID_HEADER]?: ""
+                    accessToken = response.headers()[ACCESS_HEADER] ?: "",
+                    client = response.headers()[CLIENT_HEADER] ?: "",
+                    uid = response.headers()[UID_HEADER] ?: ""
                 )
 
             } catch (err: Exception) {
@@ -55,7 +55,7 @@ class LoginViewModel: ViewModel() {
                 password = password
             )
         )
-        if(!response.isSuccessful) {
+        if (!response.isSuccessful) {
             throw IOException("Login unsuccessful")
         }
         return response
