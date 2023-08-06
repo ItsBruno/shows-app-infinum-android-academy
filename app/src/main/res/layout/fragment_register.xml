@@ -161,12 +161,11 @@
 
         <Button
             android:id="@+id/registerButton"
-            style="@style/ButtonsStyle"
+            style="@style/AuthButtonsStyle"
             android:layout_width="0dp"
             android:layout_marginBottom="@dimen/size32dp"
             android:layout_marginTop="@dimen/size88dp"
             android:text="@string/register"
-            android:textColor="@color/white"
             android:enabled="false"
             android:layout_marginHorizontal="@dimen/margin_24dp"
             app:layout_constraintBottom_toBottomOf="parent"

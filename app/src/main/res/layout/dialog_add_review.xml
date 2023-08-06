@@ -80,7 +80,7 @@
 
     <Button
         android:id="@+id/submitButton"
-        style="@style/ButtonsStyle"
+        style="@style/MiscButtonsStyle"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/margin_24dp"
         android:text="@string/submit"
